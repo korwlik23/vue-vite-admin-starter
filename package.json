@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
+    "contract:fetch": "node scripts/contracts/fetch-openapi.mjs",
     "preview": "vite preview",
     "typecheck": "vue-tsc -b",
     "lint": "eslint . --max-warnings 0",
