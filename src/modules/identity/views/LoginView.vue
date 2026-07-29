@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import type { components } from "@/generated/api/schema";
 import LoginForm from "@/modules/identity/components/LoginForm.vue";
-
-type LoginInput = components["schemas"]["LoginRequest"];
-type LoginResult =
-  | components["schemas"]["LoginAuthenticatedResponse"]
-  | components["schemas"]["LoginMFAPendingResponse"];
+import type {
+  LoginInput,
+  LoginResult,
+} from "@/modules/identity/types";
 
 const props = withDefaults(
   defineProps<{

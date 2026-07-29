@@ -13,7 +13,7 @@
     "contract:generate": "node scripts/contracts/generate-client.mjs",
     "preview": "vite preview",
     "typecheck": "vue-tsc -b",
-    "lint": "eslint . --max-warnings 0",
+    "lint": "eslint . --max-warnings 0 && node scripts/check-import-boundaries.mjs src",
     "test": "vitest",
     "test:run": "vitest run"
   },

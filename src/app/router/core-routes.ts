@@ -1,18 +1,16 @@
 import type { RouteRecordRaw } from "vue-router";
 
 import AdminRouteShell from "@/app/layouts/AdminRouteShell.vue";
-import type { components } from "@/generated/api/schema";
 import MfaChallengeView from "@/modules/identity/views/MfaChallengeView.vue";
 import LoginView from "@/modules/identity/views/LoginView.vue";
+import type {
+  LoginInput,
+  LoginResult,
+  MFAMethod,
+} from "@/modules/identity/types";
 import FoundationStatusView from "@/modules/operations/views/FoundationStatusView.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import NotFoundState from "@/shared/components/feedback/NotFoundState.vue";
-
-type LoginInput = components["schemas"]["LoginRequest"];
-type LoginResult =
-  | components["schemas"]["LoginAuthenticatedResponse"]
-  | components["schemas"]["LoginMFAPendingResponse"];
-type MFAMethod = "totp" | "recovery_code";
 
 export interface CoreRouteDependencies {
   login: {

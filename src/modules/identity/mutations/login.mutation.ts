@@ -1,9 +1,7 @@
-import type { components } from "@/generated/api/schema";
-
-type LoginInput = components["schemas"]["LoginRequest"];
-type LoginResult =
-  | components["schemas"]["LoginAuthenticatedResponse"]
-  | components["schemas"]["LoginMFAPendingResponse"];
+import type {
+  LoginInput,
+  LoginResult,
+} from "@/modules/identity/types";
 
 interface LoginDependencies {
   auth: {
