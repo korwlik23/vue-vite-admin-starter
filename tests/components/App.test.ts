@@ -3,13 +3,16 @@ import { describe, expect, it } from "vitest";
 
 import App from "@/App.vue";
 
-describe("admin scaffold", () => {
-  it("renders semantic foundation landmarks", () => {
-    const wrapper = mount(App);
+describe("admin application root", () => {
+  it("delegates screen rendering to the production router", () => {
+    const wrapper = mount(App, {
+      global: {
+        stubs: {
+          RouterView: { template: "<main>Current route</main>" },
+        },
+      },
+    });
 
-    expect(wrapper.get("header").element.tagName).toBe("HEADER");
-    expect(wrapper.get("main").attributes("id")).toBe("main-content");
-    expect(wrapper.get('a[href="#main-content"]').text()).toBe("Skip to content");
-    expect(wrapper.findAll("article")).toHaveLength(3);
+    expect(wrapper.get("main").text()).toBe("Current route");
   });
 });

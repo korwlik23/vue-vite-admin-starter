@@ -1,7 +1,4 @@
-import { createPinia } from "pinia";
-import { createApp } from "vue";
-
-import App from "@/App.vue";
+import { bootstrapAdmin } from "@/app/bootstrap";
 import "@/styles/main.css";
 
-createApp(App).use(createPinia()).mount("#app");
+await bootstrapAdmin();
