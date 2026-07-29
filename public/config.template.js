@@ -1,0 +1,3 @@
+globalThis.__STARTER_CONFIG__ = {
+  PUBLIC_API_BASE_URL: "${PUBLIC_API_BASE_URL}",
+};
