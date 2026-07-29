@@ -1,0 +1,85 @@
+.login-form {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+label {
+  color: #344054;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+input {
+  min-height: 2.85rem;
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid #b8c0ce;
+  border-radius: 0.7rem;
+  color: #101828;
+  background: white;
+  font: inherit;
+}
+
+input[aria-invalid="true"] {
+  border-color: #b42318;
+}
+
+button {
+  min-height: 2.9rem;
+  border: 0;
+  border-radius: 0.7rem;
+  color: white;
+  background: #172033;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.form-alert,
+.field-error {
+  color: #912018;
+}
+
+.form-alert {
+  padding: 0.8rem;
+  border: 1px solid #f0b4ad;
+  border-radius: 0.7rem;
+  background: #fff4f2;
+}
+
+.field-error {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  label {
+    color: #d3d9e4;
+  }
+
+  input {
+    border-color: #46536a;
+    color: #f8fafc;
+    background: #111a2d;
+  }
+
+  button {
+    color: #111827;
+    background: #e2e8f0;
+  }
+
+  .form-alert {
+    border-color: #7f2f29;
+    background: #351512;
+  }
+}
