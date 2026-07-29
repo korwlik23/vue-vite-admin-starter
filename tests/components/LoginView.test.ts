@@ -5,6 +5,7 @@ import LoginView from "@/modules/identity/views/LoginView.vue";
 
 describe("U11D", () => {
   it("composes the login form and rejects an unsafe return URL", async () => {
+    const navigate = vi.fn();
     const wrapper = mount(LoginView, {
       props: {
         authenticated: false,
@@ -13,6 +14,7 @@ describe("U11D", () => {
           status: "authenticated",
           csrf_token: "rotated",
         }),
+        navigate,
       },
     });
     await wrapper.get("#login-email").setValue("admin@example.com");
@@ -21,6 +23,7 @@ describe("U11D", () => {
     await vi.waitFor(() => {
       expect(wrapper.emitted("navigate")?.[0]).toEqual(["/"]);
     });
+    expect(navigate).toHaveBeenCalledWith("/");
   });
 
   it("does not render an anonymous form for an authenticated session", () => {

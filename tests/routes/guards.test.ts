@@ -1,6 +1,8 @@
+import { createMemoryHistory, createRouter } from "vue-router";
 import { describe, expect, it } from "vitest";
 
 import { requireAuthentication } from "@/app/router/guards/auth";
+import { installAccessGuards } from "@/app/router/guards/access";
 import { requireModule } from "@/app/router/guards/module";
 import { requirePermission } from "@/app/router/guards/permission";
 
@@ -32,5 +34,54 @@ describe("U10", () => {
       ),
     ).toBe(true);
     expect(requireModule(["localization"], "localization")).toBe(true);
+  });
+
+  it("enforces live authentication, module, and permission state on protected routes", async () => {
+    const state = {
+      authenticated: false,
+      mfaPending: false,
+      modules: [] as string[],
+      permissions: [] as string[],
+    };
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: "/login", name: "login", component: {} },
+        { path: "/mfa", name: "mfa", component: {} },
+        { path: "/403", name: "forbidden", component: {} },
+        { path: "/404", name: "not-found", component: {} },
+        {
+          path: "/",
+          name: "foundation",
+          component: {},
+          meta: {
+            requiresAuthentication: true,
+            requiredModule: "operations",
+            requiredPermission: "operations.foundation.read.system",
+          },
+        },
+      ],
+    });
+    installAccessGuards(router, {
+      isAuthenticated: () => state.authenticated,
+      isMfaPending: () => state.mfaPending,
+      enabledModuleIDs: () => state.modules,
+      permissions: () => state.permissions,
+    });
+
+    await router.push("/");
+    expect(router.currentRoute.value.name).toBe("login");
+
+    state.authenticated = true;
+    await router.push("/");
+    expect(router.currentRoute.value.name).toBe("not-found");
+
+    state.modules = ["operations"];
+    await router.push("/");
+    expect(router.currentRoute.value.name).toBe("forbidden");
+
+    state.permissions = ["operations.foundation.read.system"];
+    await router.push("/");
+    expect(router.currentRoute.value.name).toBe("foundation");
   });
 });

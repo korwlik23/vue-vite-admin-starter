@@ -14,23 +14,25 @@ import NotFoundState from "@/shared/components/feedback/NotFoundState.vue";
 
 export interface CoreRouteDependencies {
   login: {
-    authenticated: boolean;
+    authenticated: boolean | (() => boolean);
     submit: (input: LoginInput) => Promise<LoginResult>;
+    navigate?: (path: string) => Promise<unknown> | unknown;
   };
   mfa: {
-    pending: boolean;
+    pending: boolean | (() => boolean);
     methods: MFAMethod[];
     refreshCSRF: () => Promise<string>;
     submit: (input: {
       method: MFAMethod;
       code: string;
     }) => Promise<unknown> | unknown;
+    verified?: () => Promise<unknown> | unknown;
   };
   foundation: {
-    state: "loading" | "error" | "success";
+    state: "loading" | "error" | "success" | (() => "loading" | "error" | "success");
     account?: { name: string; slug: string } | undefined;
     selectedLocale?: string;
-    enabledModules?: string[];
+    enabledModules?: string[] | (() => string[]);
     retry: () => void;
   };
 }
@@ -45,6 +47,7 @@ export function createCoreRoutes(
       component: LoginView,
       props: (route) => ({
         ...dependencies.login,
+        authenticated: resolveValue(dependencies.login.authenticated),
         returnTo:
           typeof route.query.returnTo === "string" ? route.query.returnTo : "/",
       }),
@@ -53,7 +56,10 @@ export function createCoreRoutes(
       path: "/mfa",
       name: "mfa",
       component: MfaChallengeView,
-      props: dependencies.mfa,
+      props: () => ({
+        ...dependencies.mfa,
+        pending: resolveValue(dependencies.mfa.pending),
+      }),
     },
     {
       path: "/403",
@@ -68,7 +74,19 @@ export function createCoreRoutes(
           path: "",
           name: "foundation",
           component: FoundationStatusView,
-          props: dependencies.foundation,
+          props: () => ({
+            ...dependencies.foundation,
+            state: resolveValue(dependencies.foundation.state),
+            enabledModules:
+              typeof dependencies.foundation.enabledModules === "function"
+                ? dependencies.foundation.enabledModules()
+                : dependencies.foundation.enabledModules,
+          }),
+          meta: {
+            requiresAuthentication: true,
+            requiredModule: "operations",
+            requiredPermission: "operations.foundation.read.system",
+          },
         },
       ],
     },
@@ -78,4 +96,8 @@ export function createCoreRoutes(
       component: NotFoundState,
     },
   ];
+}
+
+function resolveValue<T>(value: T | (() => T)): T {
+  return typeof value === "function" ? (value as () => T)() : value;
 }

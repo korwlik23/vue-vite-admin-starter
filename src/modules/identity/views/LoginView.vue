@@ -10,8 +10,9 @@ const props = withDefaults(
     authenticated: boolean;
     returnTo?: string;
     submit: (input: LoginInput) => Promise<LoginResult>;
+    navigate?: (path: string) => Promise<unknown> | unknown;
   }>(),
-  { returnTo: "/" },
+  { returnTo: "/", navigate: async () => undefined },
 );
 
 const emit = defineEmits<{
@@ -22,9 +23,12 @@ async function handleSubmit(input: LoginInput): Promise<void> {
   const result = await props.submit(input);
   if (result.status === "mfa_pending") {
     emit("navigate", "/mfa");
+    await props.navigate?.("/mfa");
     return;
   }
-  emit("navigate", safeReturnPath(props.returnTo));
+  const destination = safeReturnPath(props.returnTo);
+  emit("navigate", destination);
+  await props.navigate?.(destination);
 }
 
 function safeReturnPath(value: string): string {

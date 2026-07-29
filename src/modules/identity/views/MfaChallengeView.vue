@@ -10,9 +10,13 @@ const props = defineProps<{
   methods: Method[];
   refreshCSRF: () => Promise<string>;
   submit: (input: { method: Method; code: string }) => Promise<unknown> | unknown;
+  verified?: () => Promise<unknown> | unknown;
 }>();
 
 const setupError = ref("");
+const emit = defineEmits<{
+  verified: [];
+}>();
 
 onMounted(async () => {
   if (!props.pending) {
@@ -24,6 +28,12 @@ onMounted(async () => {
     setupError.value = "The verification session could not be refreshed.";
   }
 });
+
+async function handleSubmit(input: { method: Method; code: string }): Promise<void> {
+  await props.submit(input);
+  emit("verified");
+  await props.verified?.();
+}
 </script>
 
 <template>
@@ -48,7 +58,7 @@ onMounted(async () => {
       <MfaChallengeForm
         v-else
         :methods="methods"
-        :on-submit="submit"
+        :on-submit="handleSubmit"
       />
     </section>
     <section

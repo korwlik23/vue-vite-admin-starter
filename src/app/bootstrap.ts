@@ -67,19 +67,38 @@ export async function bootstrapAdmin(target = "#app"): Promise<void> {
   const auth = createAuthClient(client);
   const session = await auth.currentSession();
   let enabledModuleIDs: string[] = [];
-  if (session !== undefined) {
+  let permissions: string[] = [];
+  const accessState = {
+    authenticated: session !== undefined,
+    mfaPending: false,
+  };
+
+  async function refreshProtectedCapabilities(): Promise<void> {
     const modules = await listEnabledModules(client);
     enabledModuleIDs = modules.filter((item) => item.enabled).map((item) => item.id);
-    await getEffectivePermissions(client);
+    permissions = (await getEffectivePermissions(client)).permissions;
     activateModules(createModuleRegistry(moduleManifest), enabledModuleIDs);
   }
+
+  if (accessState.authenticated) {
+    await refreshProtectedCapabilities();
+  }
+
   const router = createAppRouter({
     login: {
-      authenticated: session !== undefined,
-      submit: (input) => auth.login(input),
+      authenticated: () => accessState.authenticated,
+      submit: async (input) => {
+        const result = await auth.login(input);
+        accessState.mfaPending = result.status === "mfa_pending";
+        if (result.status === "authenticated") {
+          accessState.authenticated = true;
+          await refreshProtectedCapabilities();
+        }
+        return result;
+      },
     },
     mfa: {
-      pending: false,
+      pending: () => accessState.mfaPending,
       methods: ["totp", "recovery_code"],
       refreshCSRF: async () => {
         csrf.clear();
@@ -93,14 +112,22 @@ export async function bootstrapAdmin(target = "#app"): Promise<void> {
         if (!response.ok) {
           throw await errorFromResponse(response);
         }
+        accessState.mfaPending = false;
+        accessState.authenticated = true;
+        await refreshProtectedCapabilities();
       },
     },
     foundation: {
-      state: session === undefined ? "loading" : "success",
+      state: () => (accessState.authenticated ? "success" : "loading"),
       selectedLocale: "",
-      enabledModules: enabledModuleIDs,
+      enabledModules: () => enabledModuleIDs,
       retry: () => globalThis.location.reload(),
     },
+  }, {
+    isAuthenticated: () => accessState.authenticated,
+    isMfaPending: () => accessState.mfaPending,
+    enabledModuleIDs: () => enabledModuleIDs,
+    permissions: () => permissions,
   });
   createApp(App)
     .use(createPinia())
