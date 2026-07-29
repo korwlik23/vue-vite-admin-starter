@@ -17,15 +17,20 @@ const navigationOpen = ref(false);
   >
     Skip to content
   </a>
-  <div class="admin-shell">
+  <div
+    class="admin-shell"
+    @keydown.esc="navigationOpen = false"
+  >
     <Header
       :account-name="accountName"
+      :navigation-open="navigationOpen"
       @toggle-navigation="navigationOpen = !navigationOpen"
     >
       <slot name="header" />
     </Header>
     <div class="admin-body">
       <nav
+        id="admin-navigation"
         class="admin-navigation"
         :data-open="navigationOpen"
         aria-label="Primary navigation"

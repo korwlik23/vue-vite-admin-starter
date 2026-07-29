@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   accountName?: string | undefined;
+  navigationOpen?: boolean;
 }>();
 
 defineEmits<{
@@ -14,6 +15,8 @@ defineEmits<{
       class="navigation-toggle"
       type="button"
       aria-label="Toggle navigation"
+      aria-controls="admin-navigation"
+      :aria-expanded="navigationOpen"
       @click="$emit('toggleNavigation')"
     >
       Menu
