@@ -259,7 +259,25 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/authorization/roles/{role_id}/assignments": {
+    "/authorization/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List roles visible to the system administration surface. */
+        get: operations["listAuthorizationRoles"];
+        put?: never;
+        /** Create an account-owned role. */
+        post: operations["createAuthorizationRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/authorization/roles/{role_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -267,6 +285,24 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Rename an account-owned role with optimistic concurrency. */
+        patch: operations["updateAuthorizationRole"];
+        trace?: never;
+    };
+    "/authorization/roles/{role_id}/assignments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List principals assigned to a role. */
+        get: operations["listRoleAssignments"];
         put?: never;
         /** Assign a role in account or system scope using optimistic concurrency. */
         post: operations["assignRole"];
@@ -283,7 +319,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** List permissions granted to a role. */
+        get: operations["listRolePermissions"];
         put?: never;
         /** Grant a permission key to a role using optimistic concurrency. */
         post: operations["grantRolePermission"];
@@ -428,6 +465,12 @@ export interface components {
              */
             scope: "account";
             user_id: string;
+        };
+        CreateRoleRequest: {
+            account_id: string;
+            name: string;
+            /** @enum {string} */
+            scope: "account";
         };
         CSRFTokenResponse: {
             /** @description Session-bound CSRF token for the immediately following unsafe request. */
@@ -576,6 +619,12 @@ export interface components {
             id: string;
             reconcile_revision: number;
         };
+        PageInfo: {
+            page: number;
+            per_page: number;
+            total_items: number;
+            total_pages: number;
+        };
         PasswordResetRequest: {
             new_password: string;
             token: string;
@@ -613,12 +662,54 @@ export interface components {
             /** Format: email */
             email: string;
         };
+        RoleAssignmentItem: {
+            account_id?: string | null;
+            assignment_id: string;
+            /** Format: date-time */
+            created_at: string;
+            role_id: string;
+            /** @enum {string} */
+            scope: "system" | "account";
+            user_id: string;
+        };
+        RoleAssignmentListResponse: {
+            items: components["schemas"]["RoleAssignmentItem"][];
+            page: components["schemas"]["PageInfo"];
+        };
         RoleAssignmentRequest: components["schemas"]["AccountRoleAssignmentRequest"] | components["schemas"]["SystemRoleAssignmentRequest"];
         RoleAssignmentResponse: {
             affected_principals: number;
             assignment_id: string;
             role_id: string;
             session_outcome: components["schemas"]["SessionInvalidationOutcome"];
+            version: number;
+        };
+        RoleListResponse: {
+            items: components["schemas"]["RoleResponse"][];
+            page: components["schemas"]["PageInfo"];
+        };
+        RolePermissionItem: {
+            active: boolean;
+            delegable: boolean;
+            permission_key: string;
+            /** @enum {string} */
+            tier: "core" | "default" | "optional";
+        };
+        RolePermissionListResponse: {
+            items: components["schemas"]["RolePermissionItem"][];
+            role_id: string;
+            role_version: number;
+        };
+        RoleResponse: {
+            account_id?: string | null;
+            /** Format: date-time */
+            created_at: string;
+            id: string;
+            name: string;
+            /** @enum {string} */
+            owner_type: "system" | "account";
+            /** Format: date-time */
+            updated_at: string;
             version: number;
         };
         RoleRevokeRequest: {
@@ -686,6 +777,10 @@ export interface components {
             locale: string;
             version: number;
         };
+        UpdateRoleRequest: {
+            expected_version: number;
+            name: string;
+        };
     };
     responses: {
         /** @description The request could not be processed. */
@@ -743,7 +838,12 @@ export interface components {
             };
         };
     };
-    parameters: never;
+    parameters: {
+        /** @description One-based page number. */
+        Page: number;
+        /** @description Requested page size. The API enforces the upper bound. */
+        PerPage: number;
+    };
     requestBodies: never;
     headers: never;
     pathItems: never;
@@ -1151,6 +1251,122 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
         };
     };
+    listAuthorizationRoles: {
+        parameters: {
+            query?: {
+                account_id?: string;
+                /** @description One-based page number. */
+                page?: components["parameters"]["Page"];
+                /** @description Requested page size. The API enforces the upper bound. */
+                per_page?: components["parameters"]["PerPage"];
+                scope?: "system" | "account";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A bounded role page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    createAuthorizationRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRoleRequest"];
+            };
+        };
+        responses: {
+            /** @description The account role was created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+        };
+    };
+    updateAuthorizationRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                role_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRoleRequest"];
+            };
+        };
+        responses: {
+            /** @description The account role was renamed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+        };
+    };
+    listRoleAssignments: {
+        parameters: {
+            query?: {
+                /** @description One-based page number. */
+                page?: components["parameters"]["Page"];
+                /** @description Requested page size. The API enforces the upper bound. */
+                per_page?: components["parameters"]["PerPage"];
+            };
+            header?: never;
+            path: {
+                role_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A bounded assignment page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoleAssignmentListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
     assignRole: {
         parameters: {
             query?: never;
@@ -1178,6 +1394,31 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             409: components["responses"]["Conflict"];
+        };
+    };
+    listRolePermissions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                role_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The role permission projection. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RolePermissionListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
         };
     };
     grantRolePermission: {
