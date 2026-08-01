@@ -10,6 +10,8 @@ import type {
 } from "@/modules/identity/types";
 import FoundationStatusView from "@/modules/operations/views/FoundationStatusView.vue";
 import RoleAdministrationView from "@/modules/authorization/views/RoleAdministrationView.vue";
+import UsersView from "@/modules/identity/views/UsersView.vue";
+import MembershipsView from "@/modules/accounts/views/MembershipsView.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import NotFoundState from "@/shared/components/feedback/NotFoundState.vue";
 import type { APIClient } from "@/shared/api/client";
@@ -79,6 +81,31 @@ export function createCoreRoutes(
         requiresAuthentication: true,
         requiredModule: "authorization",
         requiredPermission: "authorization.roles.read.system",
+      },
+    });
+    children.push({
+      path: "users",
+      name: "identity-users",
+      component: UsersView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "identity",
+        requiredPermission: "identity.users.read.system",
+      },
+    });
+    children.push({
+      path: "accounts/memberships",
+      name: "account-memberships",
+      component: MembershipsView,
+      props: () => ({
+        client: dependencies.authorization?.client,
+        accountID: dependencies.authorization?.accountID,
+      }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "accounts",
+        requiredPermission: "accounts.memberships.read.system",
       },
     });
   }

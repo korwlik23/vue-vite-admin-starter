@@ -4,6 +4,40 @@
  */
 
 export interface paths {
+    "/accounts/{account_id}/memberships": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List memberships for a specific account. */
+        get: operations["listAccountMemberships"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts/{account_id}/memberships/{membership_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Change membership status with optimistic concurrency. */
+        patch: operations["updateMembershipStatus"];
+        trace?: never;
+    };
     "/accounts/current": {
         parameters: {
             query?: never;
@@ -452,6 +486,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List users for system administration. */
+        get: operations["listAdminUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read a user and visible membership summary. */
+        get: operations["getAdminUser"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{user_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Change user status with optimistic concurrency. */
+        patch: operations["updateAdminUserStatus"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -465,6 +550,47 @@ export interface components {
              */
             scope: "account";
             user_id: string;
+        };
+        AdminUserDetailResponse: {
+            memberships: components["schemas"]["AdminUserMembershipSummary"][];
+            user: components["schemas"]["AdminUserResponse"];
+        };
+        AdminUserListItem: components["schemas"]["AdminUserResponse"] & {
+            active_membership_count: number;
+            membership_count: number;
+        };
+        AdminUserListResponse: {
+            items: components["schemas"]["AdminUserListItem"][];
+            page: components["schemas"]["PageInfo"];
+        };
+        AdminUserMembershipSummary: {
+            account_id: string;
+            account_slug: string;
+            authorization_version: number;
+            /** Format: date-time */
+            created_at: string;
+            id: string;
+            /** @enum {string} */
+            status: "active" | "disabled";
+            /** Format: date-time */
+            updated_at: string;
+        };
+        AdminUserResponse: {
+            authorization_version: number;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: email */
+            email: string;
+            id: string;
+            /** @enum {string} */
+            status: "active" | "disabled";
+            /** Format: date-time */
+            updated_at: string;
+        };
+        AdminUserStatusRequest: {
+            expected_version: number;
+            /** @enum {string} */
+            status: "active" | "disabled";
         };
         CreateRoleRequest: {
             account_id: string;
@@ -576,6 +702,30 @@ export interface components {
             /** Format: email */
             email: string;
             password: string;
+        };
+        MembershipListResponse: {
+            items: components["schemas"]["MembershipResponse"][];
+            page: components["schemas"]["PageInfo"];
+        };
+        MembershipResponse: {
+            account_id: string;
+            account_slug: string;
+            authorization_version: number;
+            /** Format: date-time */
+            created_at: string;
+            id: string;
+            /** @enum {string} */
+            status: "active" | "disabled";
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: email */
+            user_email: string;
+            user_id: string;
+        };
+        MembershipStatusRequest: {
+            expected_version: number;
+            /** @enum {string} */
+            status: "active" | "disabled";
         };
         MFAChallengeResponse: {
             challenge_id: string;
@@ -850,6 +1000,67 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    listAccountMemberships: {
+        parameters: {
+            query?: {
+                /** @description One-based page number. */
+                page?: components["parameters"]["Page"];
+                /** @description Requested page size. The API enforces the upper bound. */
+                per_page?: components["parameters"]["PerPage"];
+                status?: "active" | "disabled";
+            };
+            header?: never;
+            path: {
+                account_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A bounded membership page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MembershipListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    updateMembershipStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                account_id: string;
+                membership_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MembershipStatusRequest"];
+            };
+        };
+        responses: {
+            /** @description The membership status changed and affected sessions were invalidated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MembershipResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+        };
+    };
     getCurrentAccount: {
         parameters: {
             query?: never;
@@ -1704,6 +1915,90 @@ export interface operations {
                 };
             };
             401: components["responses"]["Unauthorized"];
+        };
+    };
+    listAdminUsers: {
+        parameters: {
+            query?: {
+                email?: string;
+                /** @description One-based page number. */
+                page?: components["parameters"]["Page"];
+                /** @description Requested page size. The API enforces the upper bound. */
+                per_page?: components["parameters"]["PerPage"];
+                status?: "active" | "disabled";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A bounded user page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    getAdminUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The user detail. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserDetailResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    updateAdminUserStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminUserStatusRequest"];
+            };
+        };
+        responses: {
+            /** @description The user status changed and sessions were invalidated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
         };
     };
 }
