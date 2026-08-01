@@ -9,8 +9,10 @@ import type {
   MFAMethod,
 } from "@/modules/identity/types";
 import FoundationStatusView from "@/modules/operations/views/FoundationStatusView.vue";
+import RoleAdministrationView from "@/modules/authorization/views/RoleAdministrationView.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import NotFoundState from "@/shared/components/feedback/NotFoundState.vue";
+import type { APIClient } from "@/shared/api/client";
 
 export interface CoreRouteDependencies {
   login: {
@@ -35,11 +37,51 @@ export interface CoreRouteDependencies {
     enabledModules?: string[] | (() => string[]);
     retry: () => void;
   };
+  authorization?: {
+    client: APIClient;
+    accountID?: string | (() => string | undefined);
+  };
 }
 
 export function createCoreRoutes(
   dependencies: CoreRouteDependencies,
 ): RouteRecordRaw[] {
+  const children: RouteRecordRaw[] = [
+    {
+      path: "",
+      name: "foundation",
+      component: FoundationStatusView,
+      props: () => ({
+        ...dependencies.foundation,
+        state: resolveValue(dependencies.foundation.state),
+        enabledModules:
+          typeof dependencies.foundation.enabledModules === "function"
+            ? dependencies.foundation.enabledModules()
+            : dependencies.foundation.enabledModules,
+      }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "operations",
+        requiredPermission: "operations.foundation.read.system",
+      },
+    },
+  ];
+  if (dependencies.authorization !== undefined) {
+    children.push({
+      path: "authorization/roles",
+      name: "authorization-roles",
+      component: RoleAdministrationView,
+      props: () => ({
+        client: dependencies.authorization?.client,
+        accountID: dependencies.authorization?.accountID,
+      }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "authorization",
+        requiredPermission: "authorization.roles.read.system",
+      },
+    });
+  }
   return [
     {
       path: "/login",
@@ -69,26 +111,7 @@ export function createCoreRoutes(
     {
       path: "/",
       component: AdminRouteShell,
-      children: [
-        {
-          path: "",
-          name: "foundation",
-          component: FoundationStatusView,
-          props: () => ({
-            ...dependencies.foundation,
-            state: resolveValue(dependencies.foundation.state),
-            enabledModules:
-              typeof dependencies.foundation.enabledModules === "function"
-                ? dependencies.foundation.enabledModules()
-                : dependencies.foundation.enabledModules,
-          }),
-          meta: {
-            requiresAuthentication: true,
-            requiredModule: "operations",
-            requiredPermission: "operations.foundation.read.system",
-          },
-        },
-      ],
+      children,
     },
     {
       path: "/:pathMatch(.*)*",

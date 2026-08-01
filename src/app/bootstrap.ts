@@ -123,6 +123,7 @@ export async function bootstrapAdmin(target = "#app"): Promise<void> {
       enabledModules: () => enabledModuleIDs,
       retry: () => globalThis.location.reload(),
     },
+    authorization: { client },
   }, {
     isAuthenticated: () => accessState.authenticated,
     isMfaPending: () => accessState.mfaPending,

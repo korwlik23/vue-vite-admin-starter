@@ -5,5 +5,6 @@ export interface AdminModule {
 
 export const moduleManifest: readonly AdminModule[] = [
   { id: "operations", activate: () => undefined },
+  { id: "authorization", activate: () => undefined },
   { id: "localization", activate: () => undefined },
 ];
