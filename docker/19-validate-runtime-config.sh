@@ -7,3 +7,5 @@ if [ "${#value}" -gt 2048 ] || ! printf '%s' "$value" |
     echo "PUBLIC_API_BASE_URL is invalid" >&2
     exit 1
 fi
+
+mkdir -p /tmp/runtime-config

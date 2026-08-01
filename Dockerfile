@@ -15,7 +15,7 @@ COPY --chmod=0555 docker/19-validate-runtime-config.sh /docker-entrypoint.d/19-v
 COPY --chown=101:101 public/config.template.js /etc/nginx/templates/config.js.template
 
 ENV NGINX_ENVSUBST_TEMPLATE_DIR=/etc/nginx/templates \
-    NGINX_ENVSUBST_OUTPUT_DIR=/usr/share/nginx/html
+    NGINX_ENVSUBST_OUTPUT_DIR=/tmp/runtime-config
 
 USER 101:101
 EXPOSE 8080

@@ -14,4 +14,14 @@ describe("C2.2 admin runtime config entrypoint", () => {
     expect(script).toContain("exit 1");
     expect(script).not.toContain("eval ");
   });
+
+  it("writes generated public config only to the runtime tmpfs", () => {
+    const dockerfile = readFileSync(resolve(process.cwd(), "Dockerfile"), "utf8");
+    expect(dockerfile).toContain(
+      "NGINX_ENVSUBST_OUTPUT_DIR=/tmp/runtime-config",
+    );
+    expect(dockerfile).not.toContain(
+      "NGINX_ENVSUBST_OUTPUT_DIR=/usr/share/nginx/html",
+    );
+  });
 });
