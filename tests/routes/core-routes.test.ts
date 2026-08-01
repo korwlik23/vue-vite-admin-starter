@@ -53,4 +53,22 @@ describe("U14A", () => {
       requiredPermission: "authorization.roles.read.system",
     });
   });
+
+  it("keeps audit and localization screens behind explicit permissions", () => {
+    const client = { request: vi.fn() } as unknown as APIClient;
+    const routes = createCoreRoutes({
+      login: { authenticated: false, submit: vi.fn() },
+      mfa: { pending: false, methods: [], refreshCSRF: vi.fn(), submit: vi.fn() },
+      foundation: { state: "loading", retry: vi.fn() },
+      authorization: { client },
+    });
+    const router = createRouter({ history: createMemoryHistory(), routes });
+
+    expect(router.resolve("/audit/events").meta).toMatchObject({
+      requiredModule: "audit", requiredPermission: "audit.events.read.system",
+    });
+    expect(router.resolve("/localization/catalog").meta).toMatchObject({
+      requiredModule: "localization", requiredPermission: "localization.translations.update.system",
+    });
+  });
 });

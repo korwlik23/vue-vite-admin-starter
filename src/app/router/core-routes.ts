@@ -12,6 +12,10 @@ import FoundationStatusView from "@/modules/operations/views/FoundationStatusVie
 import RoleAdministrationView from "@/modules/authorization/views/RoleAdministrationView.vue";
 import UsersView from "@/modules/identity/views/UsersView.vue";
 import MembershipsView from "@/modules/accounts/views/MembershipsView.vue";
+import AuditEventsView from "@/modules/audit/views/AuditEventsView.vue";
+import ModulesView from "@/modules/operations/views/ModulesView.vue";
+import LocalesView from "@/modules/localization/views/LocalesView.vue";
+import CatalogEditorView from "@/modules/localization/views/CatalogEditorView.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import NotFoundState from "@/shared/components/feedback/NotFoundState.vue";
 import type { APIClient } from "@/shared/api/client";
@@ -106,6 +110,50 @@ export function createCoreRoutes(
         requiresAuthentication: true,
         requiredModule: "accounts",
         requiredPermission: "accounts.memberships.read.system",
+      },
+    });
+    children.push({
+      path: "audit/events",
+      name: "audit-events",
+      component: AuditEventsView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "audit",
+        requiredPermission: "audit.events.read.system",
+      },
+    });
+    children.push({
+      path: "operations/modules",
+      name: "operations-modules",
+      component: ModulesView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "operations",
+        requiredPermission: "operations.foundation.read.system",
+      },
+    });
+    children.push({
+      path: "localization/locales",
+      name: "localization-locales",
+      component: LocalesView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "localization",
+        requiredPermission: "localization.locales.manage.system",
+      },
+    });
+    children.push({
+      path: "localization/catalog",
+      name: "localization-catalog",
+      component: CatalogEditorView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "localization",
+        requiredPermission: "localization.translations.update.system",
       },
     });
   }

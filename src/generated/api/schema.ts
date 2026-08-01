@@ -55,6 +55,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/audit/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List redacted system audit events. */
+        get: operations["listAuditEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/csrf": {
         parameters: {
             query?: never;
@@ -592,6 +609,28 @@ export interface components {
             /** @enum {string} */
             status: "active" | "disabled";
         };
+        AuditEvent: {
+            action: string;
+            actor_id?: string | null;
+            /** @enum {string} */
+            actor_type: "user" | "system" | "anonymous";
+            data: {
+                [key: string]: unknown;
+            };
+            id: string;
+            /** Format: date-time */
+            occurred_at: string;
+            operation_id: string;
+            /** Format: date-time */
+            recorded_at: string;
+            request_id?: string | null;
+            /** @enum {string} */
+            scope: "system";
+        };
+        AuditEventListResponse: {
+            items: components["schemas"]["AuditEvent"][];
+            next_cursor?: string | null;
+        };
         CreateRoleRequest: {
             account_id: string;
             name: string;
@@ -641,6 +680,7 @@ export interface components {
             id: string;
             name: string;
             selectable: boolean;
+            version?: number;
         };
         LocaleCreateRequest: {
             code: string;
@@ -1080,6 +1120,34 @@ export interface operations {
                     "application/json": components["schemas"]["CurrentAccountResponse"];
                 };
             };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    listAuditEvents: {
+        parameters: {
+            query?: {
+                action?: string;
+                actor_id?: string;
+                cursor?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A redacted append-only audit page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditEventListResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
         };

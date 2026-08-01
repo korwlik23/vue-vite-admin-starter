@@ -14,6 +14,10 @@ import Sidebar from "@/shared/components/shell/Sidebar.vue";
           { id: 'roles', label: 'Roles', href: '/authorization/roles' },
           { id: 'users', label: 'Users', href: '/users' },
           { id: 'memberships', label: 'Memberships', href: '/accounts/memberships' },
+          { id: 'audit', label: 'Audit', href: '/audit/events' },
+          { id: 'modules', label: 'Modules', href: '/operations/modules' },
+          { id: 'locales', label: 'Locales', href: '/localization/locales' },
+          { id: 'catalog', label: 'Catalog', href: '/localization/catalog' },
         ]"
       />
     </template>
