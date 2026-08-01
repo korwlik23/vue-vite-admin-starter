@@ -11,6 +11,7 @@ describe("C2.1 admin server contract", () => {
 
     expect(config).toContain("listen 8080");
     expect(config).toContain("try_files $uri $uri/ /index.html");
+    expect(config).toMatch(/location = \/healthz[\s\S]*return 200 "ok\\n"/);
     expect(config).toMatch(/location = \/config\.js[\s\S]*no-store/);
     expect(config).toContain("alias /tmp/runtime-config/config.js");
     expect(config).toContain("X-Content-Type-Options");
