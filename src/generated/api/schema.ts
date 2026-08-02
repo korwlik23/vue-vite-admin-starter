@@ -723,6 +723,183 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/publishing/content/{content_id}/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Issue a short-lived one-time public preview token. */
+        post: operations["issuePublishingPreview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/publishing/content/{content_id}/revisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List immutable revisions for one content translation. */
+        get: operations["listPublishingRevisions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/publishing/content/{content_id}/revisions/{revision_id}/rollback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restore a revision into the current content translation. */
+        post: operations["rollbackPublishingRevision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/publishing/content/{content_id}/workflow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Transition content through review, publish, schedule or archive. */
+        post: operations["transitionPublishingWorkflow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/publishing/pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a page translation in the current account. */
+        post: operations["createPublishingPage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/publishing/pages/{page_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Soft-delete a page translation using optimistic concurrency. */
+        delete: operations["deletePublishingPage"];
+        options?: never;
+        head?: never;
+        /** Update a page translation using optimistic concurrency. */
+        patch: operations["updatePublishingPage"];
+        trace?: never;
+    };
+    "/publishing/posts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a post translation in the current account. */
+        post: operations["createPublishingPost"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/publishing/posts/{post_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Soft-delete a post translation using optimistic concurrency. */
+        delete: operations["deletePublishingPost"];
+        options?: never;
+        head?: never;
+        /** Update a post translation using optimistic concurrency. */
+        patch: operations["updatePublishingPost"];
+        trace?: never;
+    };
+    "/publishing/schedules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List publication schedules for the current account. */
+        get: operations["listPublishingSchedules"];
+        put?: never;
+        /** Schedule a publish/unpublish operation with an idempotency key. */
+        post: operations["createPublishingSchedule"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/publishing/schedules/{schedule_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Cancel a pending publication schedule. */
+        delete: operations["cancelPublishingSchedule"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users": {
         parameters: {
             query?: never;
@@ -829,6 +1006,10 @@ export interface components {
             /** @enum {string} */
             status: "active" | "disabled";
         };
+        AEOFields: {
+            answer: string;
+            question: string;
+        };
         Asset: {
             /** Format: uuid */
             account_id: string;
@@ -888,6 +1069,13 @@ export interface components {
             items: components["schemas"]["AuditEvent"][];
             next_cursor?: string | null;
         };
+        Block: {
+            data: {
+                [key: string]: unknown;
+            };
+            /** @enum {string} */
+            type: "text" | "image" | "callout" | "answer" | "steps" | "comparison";
+        };
         ContentAudit: {
             /** Format: uuid */
             account_id: string;
@@ -918,6 +1106,74 @@ export interface components {
         ContentAuditListResponse: {
             items: components["schemas"]["ContentAudit"][];
             next?: components["schemas"]["ContentAuditCursor"];
+        };
+        ContentDeleteRequest: {
+            expected_version: number;
+            /** Format: uuid */
+            locale_id: string;
+            /** Format: uuid */
+            translation_id: string;
+        };
+        ContentMutationRequest: {
+            aeo: components["schemas"]["AEOFields"];
+            blocks: components["schemas"]["Block"][];
+            content_key?: string;
+            excerpt: string;
+            expected_version?: number;
+            geo: components["schemas"]["GEOFields"];
+            /** @enum {string} */
+            kind?: "page" | "post";
+            locale: string;
+            path: string;
+            seo: components["schemas"]["SEOFields"];
+            slug: string;
+            title: string;
+            /** Format: uuid */
+            translation_id?: string;
+        };
+        ContentResponse: {
+            /** Format: uuid */
+            account_id: string;
+            aeo: components["schemas"]["AEOFields"];
+            blocks: components["schemas"]["Block"][];
+            /** Format: uuid */
+            content_id: string;
+            content_key: string;
+            /** @enum {string} */
+            content_status: "draft" | "review" | "published" | "scheduled" | "archived";
+            content_version: number;
+            excerpt: string;
+            geo: components["schemas"]["GEOFields"];
+            /** @enum {string} */
+            kind: "page" | "post";
+            /** Format: uuid */
+            locale_id: string;
+            path: string;
+            seo: components["schemas"]["SEOFields"];
+            slug: string;
+            title: string;
+            /** Format: uuid */
+            translation_id: string;
+            /** @enum {string} */
+            translation_status: "draft" | "review" | "published" | "scheduled" | "archived";
+            translation_version: number;
+        };
+        ContentUpdateRequest: {
+            aeo: components["schemas"]["AEOFields"];
+            blocks: components["schemas"]["Block"][];
+            content_key?: string;
+            excerpt: string;
+            expected_version: number;
+            geo: components["schemas"]["GEOFields"];
+            /** @enum {string} */
+            kind?: "page" | "post";
+            locale: string;
+            path: string;
+            seo: components["schemas"]["SEOFields"];
+            slug: string;
+            title: string;
+            /** Format: uuid */
+            translation_id: string;
         };
         CreateRoleRequest: {
             account_id: string;
@@ -967,6 +1223,10 @@ export interface components {
         };
         FinalizeUploadRequest: {
             expected_version: number;
+        };
+        GEOFields: {
+            locality: string;
+            region: string;
         };
         Locale: {
             code: string;
@@ -1204,6 +1464,21 @@ export interface components {
             session_outcome: components["schemas"]["SessionInvalidationOutcome"];
             version: number;
         };
+        PreviewIssueRequest: {
+            /** Format: uuid */
+            revision_id: string;
+            /** Format: uuid */
+            translation_id: string;
+        };
+        PreviewIssueResponse: {
+            /** Format: date-time */
+            expires_at: string;
+            /** Format: uuid */
+            revision_id: string;
+            token: string;
+            /** Format: uuid */
+            token_id: string;
+        };
         Problem: {
             /** @description Stable, machine-readable error code. */
             code: string;
@@ -1260,6 +1535,52 @@ export interface components {
         };
         RedirectUpdateRequest: components["schemas"]["RedirectMutationRequest"] & {
             expected_version: number;
+        };
+        Revision: {
+            /** Format: uuid */
+            author_id: string;
+            change_summary: string;
+            /** Format: uuid */
+            content_id: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: uuid */
+            id: string;
+            snapshot_hash: string;
+            source_version: number;
+            /** Format: uuid */
+            translation_id: string;
+        };
+        RevisionCursor: {
+            /** Format: date-time */
+            created_at: string;
+            /** Format: uuid */
+            id: string;
+        };
+        RevisionListResponse: {
+            items: components["schemas"]["Revision"][];
+            next?: components["schemas"]["RevisionCursor"];
+        };
+        RevisionRollbackRequest: {
+            change_summary: string;
+            expected_version: number;
+            /** Format: uuid */
+            locale_id: string;
+            /** Format: uuid */
+            translation_id: string;
+        };
+        RevisionRollbackResponse: {
+            content: {
+                /** Format: uuid */
+                content_id: string;
+                content_version: number;
+                /** @enum {string} */
+                status: "draft" | "review" | "published" | "scheduled" | "archived";
+                /** Format: uuid */
+                translation_id: string;
+                translation_version: number;
+            };
+            revision: components["schemas"]["Revision"];
         };
         RoleAssignmentItem: {
             account_id?: string | null;
@@ -1328,6 +1649,36 @@ export interface components {
             /** Format: uuid */
             locale_id: string;
         };
+        Schedule: {
+            /** Format: uuid */
+            account_id: string;
+            attempts: number;
+            expected_version: number;
+            /** Format: uuid */
+            id: string;
+            idempotency_key: string;
+            /** Format: date-time */
+            publish_at: string;
+            /** @enum {string} */
+            state: "pending" | "leased" | "succeeded" | "failed" | "canceled";
+            /** Format: uuid */
+            translation_id: string;
+            /** Format: date-time */
+            unpublish_at?: string;
+        };
+        ScheduleListResponse: {
+            items: components["schemas"]["Schedule"][];
+        };
+        ScheduleRequest: {
+            expected_version: number;
+            idempotency_key: string;
+            /** Format: date-time */
+            publish_at: string;
+            /** Format: uuid */
+            translation_id: string;
+            /** Format: date-time */
+            unpublish_at?: string;
+        };
         SEODefaults: {
             /** Format: uuid */
             account_id: string;
@@ -1345,6 +1696,15 @@ export interface components {
             /** Format: date-time */
             updated_at: string;
             version: number;
+        };
+        SEOFields: {
+            canonical_url: string;
+            description: string;
+            robots: string;
+            structured_data?: {
+                [key: string]: unknown;
+            };
+            title: string;
         };
         SEOUpdateRequest: {
             canonical_base: string;
@@ -1433,6 +1793,27 @@ export interface components {
             state: "pending" | "finalized" | "failed" | "expired";
             version: number;
         };
+        WorkflowRequest: {
+            /** @enum {string} */
+            action: "submit_review" | "approve" | "publish" | "schedule" | "archive";
+            expected_version: number;
+            /** Format: uuid */
+            locale_id: string;
+            /** Format: uuid */
+            translation_id: string;
+        };
+        WorkflowResponse: {
+            /** Format: uuid */
+            content_id: string;
+            /** @enum {string} */
+            content_status: "draft" | "review" | "published" | "scheduled" | "archived";
+            content_version: number;
+            /** Format: uuid */
+            translation_id: string;
+            /** @enum {string} */
+            translation_status: "draft" | "review" | "published" | "scheduled" | "archived";
+            translation_version: number;
+        };
     };
     responses: {
         /** @description The request could not be processed. */
@@ -1482,6 +1863,15 @@ export interface components {
         };
         /** @description Authentication is required or no longer valid. */
         Unauthorized: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorEnvelope"];
+            };
+        };
+        /** @description The request content type is not supported. */
+        UnsupportedMediaType: {
             headers: {
                 [name: string]: unknown;
             };
@@ -3047,6 +3437,416 @@ export interface operations {
                 };
             };
             401: components["responses"]["Unauthorized"];
+        };
+    };
+    issuePublishingPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                content_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreviewIssueRequest"];
+            };
+        };
+        responses: {
+            /** @description One-time preview token; never persist or log the raw token. */
+            201: {
+                headers: {
+                    "Cache-Control"?: "no-store";
+                    "X-Robots-Tag"?: "noindex, nofollow";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreviewIssueResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    listPublishingRevisions: {
+        parameters: {
+            query: {
+                after_created_at?: string;
+                after_id?: string;
+                limit?: number;
+                translation_id: string;
+            };
+            header?: never;
+            path: {
+                content_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Immutable revisions in stable created-at/id order. */
+            200: {
+                headers: {
+                    "Cache-Control"?: "no-store";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionListResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    rollbackPublishingRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                content_id: string;
+                revision_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RevisionRollbackRequest"];
+            };
+        };
+        responses: {
+            /** @description The revision and restored content state. */
+            200: {
+                headers: {
+                    "Cache-Control"?: "no-store";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevisionRollbackResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+        };
+    };
+    transitionPublishingWorkflow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                content_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkflowRequest"];
+            };
+        };
+        responses: {
+            /** @description The updated content workflow state. */
+            200: {
+                headers: {
+                    "Cache-Control"?: "no-store";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkflowResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    createPublishingPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContentMutationRequest"] & {
+                    content_key: string;
+                    /** @enum {string} */
+                    kind: "page";
+                };
+            };
+        };
+        responses: {
+            /** @description The page was created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    deletePublishingPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContentDeleteRequest"];
+            };
+        };
+        responses: {
+            /** @description The page was deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+        };
+    };
+    updatePublishingPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContentUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description The page was updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    createPublishingPost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContentMutationRequest"] & {
+                    content_key: string;
+                    /** @enum {string} */
+                    kind: "post";
+                };
+            };
+        };
+        responses: {
+            /** @description The post was created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    deletePublishingPost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContentDeleteRequest"];
+            };
+        };
+        responses: {
+            /** @description The post was deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+        };
+    };
+    updatePublishingPost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContentUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description The post was updated. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    listPublishingSchedules: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account-scoped publication schedules. */
+            200: {
+                headers: {
+                    "Cache-Control"?: "no-store";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleListResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    createPublishingSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleRequest"];
+            };
+        };
+        responses: {
+            /** @description The schedule was created. */
+            201: {
+                headers: {
+                    "Cache-Control"?: "no-store";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Schedule"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    cancelPublishingSchedule: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                schedule_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The schedule was canceled. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            415: components["responses"]["UnsupportedMediaType"];
         };
     };
     listAdminUsers: {
