@@ -15,7 +15,8 @@
     "typecheck": "vue-tsc -b",
     "lint": "eslint . --max-warnings 0 && node scripts/check-import-boundaries.mjs src",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@tanstack/vue-query": "5.101.4",
