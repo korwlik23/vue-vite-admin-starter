@@ -381,6 +381,100 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/discoverability/audits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List stored deterministic GEO/AEO content audit results. */
+        get: operations["listDiscoverabilityAudits"];
+        put?: never;
+        /** Run and store a deterministic audit for one content translation. */
+        post: operations["runDiscoverabilityAudit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discoverability/audits/{audit_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                audit_id: string;
+            };
+            cookie?: never;
+        };
+        /** Read one stored deterministic content audit result. */
+        get: operations["getDiscoverabilityAudit"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discoverability/redirects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List account-scoped redirect rules in stable cursor order. */
+        get: operations["listDiscoverabilityRedirects"];
+        put?: never;
+        /** Create an account-scoped redirect rule. */
+        post: operations["createDiscoverabilityRedirect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/discoverability/redirects/{redirect_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                redirect_id: string;
+            };
+            cookie?: never;
+        };
+        /** Read one account-scoped redirect rule. */
+        get: operations["getDiscoverabilityRedirect"];
+        put?: never;
+        post?: never;
+        /** Soft-delete a redirect rule using optimistic concurrency. */
+        delete: operations["deleteDiscoverabilityRedirect"];
+        options?: never;
+        head?: never;
+        /** Replace a redirect rule using optimistic concurrency. */
+        patch: operations["updateDiscoverabilityRedirect"];
+        trace?: never;
+    };
+    "/discoverability/seo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read locale-specific default SEO metadata. */
+        get: operations["getDiscoverabilitySEO"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Create or update locale-specific default SEO metadata. */
+        patch: operations["updateDiscoverabilitySEO"];
+        trace?: never;
+    };
     "/locales": {
         parameters: {
             query?: never;
@@ -480,6 +574,132 @@ export interface paths {
         /** Replace translation overrides for one locale category using optimistic concurrency. */
         put: operations["updateTranslationCatalog"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List account-scoped private asset metadata. */
+        get: operations["listMediaAssets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/assets/{asset_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Soft-delete an account-scoped asset and compensate storage cleanup. */
+        delete: operations["deleteMediaAsset"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/uploads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload a private media object and create a pending upload session. */
+        post: operations["startMediaUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/media/uploads/{upload_id}/finalize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate and finalize a private upload into an asset. */
+        post: operations["finalizeMediaUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/navigation/menus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List account-scoped navigation menus with bounded pagination. */
+        get: operations["listNavigationMenus"];
+        put?: never;
+        /** Create a locale-specific navigation menu and ordered tree. */
+        post: operations["createNavigationMenu"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/navigation/menus/{menu_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                menu_id: string;
+            };
+            cookie?: never;
+        };
+        /** Read one account-scoped navigation menu tree. */
+        get: operations["getNavigationMenu"];
+        put?: never;
+        post?: never;
+        /** Soft-delete a menu and its items using optimistic concurrency. */
+        delete: operations["deleteNavigationMenu"];
+        options?: never;
+        head?: never;
+        /** Replace menu metadata/tree using optimistic concurrency. */
+        patch: operations["updateNavigationMenu"];
+        trace?: never;
+    };
+    "/navigation/menus/{menu_id}/reorder": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                menu_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reorder and reparent a complete menu tree atomically. */
+        post: operations["reorderNavigationMenu"];
         delete?: never;
         options?: never;
         head?: never;
@@ -609,6 +829,43 @@ export interface components {
             /** @enum {string} */
             status: "active" | "disabled";
         };
+        Asset: {
+            /** Format: uuid */
+            account_id: string;
+            /** Format: int64 */
+            byte_size: number;
+            /** Format: date-time */
+            created_at: string;
+            height?: number;
+            /** Format: uuid */
+            id: string;
+            mime_type: string;
+            original_name: string;
+            sha256: string;
+            /** Format: date-time */
+            updated_at: string;
+            version: number;
+            width?: number;
+        };
+        AssetCursor: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        AssetListResponse: {
+            items: components["schemas"]["Asset"][];
+            next?: components["schemas"]["AssetCursor"];
+        };
+        AuditCheck: {
+            message: string;
+            observed_value: string;
+            rule_key: string;
+            /** @enum {string} */
+            severity: "info" | "warning" | "error";
+            /** @enum {string} */
+            status: "pass" | "warning" | "error";
+        };
         AuditEvent: {
             action: string;
             actor_id?: string | null;
@@ -630,6 +887,37 @@ export interface components {
         AuditEventListResponse: {
             items: components["schemas"]["AuditEvent"][];
             next_cursor?: string | null;
+        };
+        ContentAudit: {
+            /** Format: uuid */
+            account_id: string;
+            checks: components["schemas"]["AuditCheck"][];
+            /** Format: uuid */
+            content_id: string;
+            content_version: number;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            locale_id: string;
+            /** @enum {string} */
+            status: "pass" | "warning" | "error";
+            /** Format: uuid */
+            translation_id: string;
+            translation_version: number;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        ContentAuditCursor: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        ContentAuditListResponse: {
+            items: components["schemas"]["ContentAudit"][];
+            next?: components["schemas"]["ContentAuditCursor"];
         };
         CreateRoleRequest: {
             account_id: string;
@@ -661,6 +949,9 @@ export interface components {
             previous_default_locale_id: string;
             version: number;
         };
+        DeleteAssetRequest: {
+            expected_version: number;
+        };
         EffectivePermissionsResponse: {
             account_id: string;
             permissions: string[];
@@ -668,8 +959,14 @@ export interface components {
         ErrorEnvelope: {
             error: components["schemas"]["Problem"];
         };
+        ExpectedVersionRequest: {
+            expected_version: number;
+        };
         FieldErrors: {
             [key: string]: string[];
+        };
+        FinalizeUploadRequest: {
+            expected_version: number;
         };
         Locale: {
             code: string;
@@ -767,6 +1064,78 @@ export interface components {
             /** @enum {string} */
             status: "active" | "disabled";
         };
+        Menu: {
+            /** Format: uuid */
+            account_id: string;
+            /** Format: date-time */
+            created_at: string;
+            enabled: boolean;
+            /** Format: uuid */
+            id: string;
+            items: components["schemas"]["MenuItem"][];
+            key: string;
+            /** Format: uuid */
+            locale_id: string;
+            name: string;
+            /** Format: date-time */
+            updated_at: string;
+            version: number;
+        };
+        MenuCursor: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        MenuItem: {
+            children?: components["schemas"]["MenuItem"][];
+            enabled: boolean;
+            /** Format: uuid */
+            id: string;
+            label: string;
+            /** Format: uuid */
+            parent_id?: string;
+            position: number;
+            target: string;
+            /** @enum {string} */
+            target_kind: "internal_path" | "external_url" | "content_key";
+            version: number;
+        };
+        MenuItemInput: {
+            children?: components["schemas"]["MenuItemInput"][];
+            enabled: boolean;
+            /** Format: uuid */
+            id?: string;
+            label: string;
+            /** Format: uuid */
+            parent_id?: string;
+            position: number;
+            target: string;
+            /** @enum {string} */
+            target_kind: "internal_path" | "external_url" | "content_key";
+        };
+        MenuListResponse: {
+            items: components["schemas"]["Menu"][];
+            next?: components["schemas"]["MenuCursor"];
+        };
+        MenuMutationRequest: {
+            enabled: boolean;
+            items: components["schemas"]["MenuItemInput"][];
+            key: string;
+            /** Format: uuid */
+            locale_id: string;
+            name: string;
+        };
+        MenuReorderRequest: {
+            expected_version: number;
+            items: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                parent_id?: string;
+                position: number;
+            }[];
+        };
         MFAChallengeResponse: {
             challenge_id: string;
             methods: ("totp" | "recovery_code")[];
@@ -852,6 +1221,46 @@ export interface components {
             /** Format: email */
             email: string;
         };
+        Redirect: {
+            /** Format: uuid */
+            account_id: string;
+            /** Format: date-time */
+            created_at: string;
+            destination_path: string;
+            enabled: boolean;
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            locale_id: string;
+            source_path: string;
+            /** @enum {integer} */
+            status_code: 301 | 302 | 307 | 308;
+            /** Format: date-time */
+            updated_at: string;
+            version: number;
+        };
+        RedirectCursor: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        RedirectListResponse: {
+            items: components["schemas"]["Redirect"][];
+            next?: components["schemas"]["RedirectCursor"];
+        };
+        RedirectMutationRequest: {
+            destination_path: string;
+            enabled: boolean;
+            /** Format: uuid */
+            locale_id: string;
+            source_path: string;
+            /** @enum {integer} */
+            status_code: 301 | 302 | 307 | 308;
+        };
+        RedirectUpdateRequest: components["schemas"]["RedirectMutationRequest"] & {
+            expected_version: number;
+        };
         RoleAssignmentItem: {
             account_id?: string | null;
             assignment_id: string;
@@ -913,6 +1322,41 @@ export interface components {
             session_outcome: components["schemas"]["SessionInvalidationOutcome"];
             version: number;
         };
+        RunContentAuditRequest: {
+            /** Format: uuid */
+            content_id: string;
+            /** Format: uuid */
+            locale_id: string;
+        };
+        SEODefaults: {
+            /** Format: uuid */
+            account_id: string;
+            canonical_base: string;
+            /** Format: date-time */
+            created_at: string;
+            description: string;
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            locale_id: string;
+            /** @enum {string} */
+            robots: "index,follow" | "noindex,follow" | "index,nofollow" | "noindex,nofollow";
+            title: string;
+            /** Format: date-time */
+            updated_at: string;
+            version: number;
+        };
+        SEOUpdateRequest: {
+            canonical_base: string;
+            description: string;
+            /** @description Use zero when creating defaults for a locale for the first time. */
+            expected_version: number;
+            /** Format: uuid */
+            locale_id: string;
+            /** @enum {string} */
+            robots: "index,follow" | "noindex,follow" | "index,nofollow" | "noindex,nofollow";
+            title: string;
+        };
         SessionInvalidationOutcome: {
             /** @enum {string} */
             current_principal: "unchanged" | "rotated";
@@ -970,6 +1414,24 @@ export interface components {
         UpdateRoleRequest: {
             expected_version: number;
             name: string;
+        };
+        Upload: {
+            /** Format: uuid */
+            account_id: string;
+            /** Format: uuid */
+            asset_id?: string;
+            /** Format: int64 */
+            declared_size: number;
+            expected_sha256: string;
+            /** Format: date-time */
+            expires_at: string;
+            /** Format: uuid */
+            id: string;
+            mime_type: string;
+            original_name: string;
+            /** @enum {string} */
+            state: "pending" | "finalized" | "failed" | "expired";
+            version: number;
         };
     };
     responses: {
@@ -1729,6 +2191,290 @@ export interface operations {
             409: components["responses"]["Conflict"];
         };
     };
+    listDiscoverabilityAudits: {
+        parameters: {
+            query?: {
+                after_id?: string;
+                after_updated_at?: string;
+                content_id?: string;
+                limit?: number;
+                locale_id?: string;
+                status?: "pass" | "warning" | "error";
+                translation_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account-scoped audit results ordered by update time and ID. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentAuditListResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    runDiscoverabilityAudit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RunContentAuditRequest"];
+            };
+        };
+        responses: {
+            /** @description The audit result was stored with the observed content and translation versions. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentAudit"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    getDiscoverabilityAudit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                audit_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The stored audit result. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentAudit"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    listDiscoverabilityRedirects: {
+        parameters: {
+            query?: {
+                after_id?: string;
+                after_updated_at?: string;
+                enabled?: boolean;
+                limit?: number;
+                locale_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account-scoped redirect rules. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RedirectListResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    createDiscoverabilityRedirect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RedirectMutationRequest"];
+            };
+        };
+        responses: {
+            /** @description The redirect rule was created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Redirect"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    getDiscoverabilityRedirect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                redirect_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The redirect rule. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Redirect"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    deleteDiscoverabilityRedirect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                redirect_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpectedVersionRequest"];
+            };
+        };
+        responses: {
+            /** @description The redirect rule was soft-deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+        };
+    };
+    updateDiscoverabilityRedirect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                redirect_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RedirectUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description The updated redirect rule. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Redirect"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    getDiscoverabilitySEO: {
+        parameters: {
+            query: {
+                locale_id: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Locale-specific SEO defaults. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SEODefaults"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    updateDiscoverabilitySEO: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SEOUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description The saved SEO defaults. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SEODefaults"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
     listLocales: {
         parameters: {
             query?: never;
@@ -1961,6 +2707,324 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             409: components["responses"]["Conflict"];
+        };
+    };
+    listMediaAssets: {
+        parameters: {
+            query?: {
+                after_id?: string;
+                after_updated_at?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A bounded account-scoped asset projection. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssetListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    deleteMediaAsset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                asset_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteAssetRequest"];
+            };
+        };
+        responses: {
+            /** @description The asset was soft-deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+        };
+    };
+    startMediaUpload: {
+        parameters: {
+            query?: never;
+            header: {
+                "Content-Length": number;
+                "X-Content-SHA256": string;
+                "X-File-Name": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/pdf": string;
+                "image/gif": string;
+                "image/jpeg": string;
+                "image/png": string;
+                "image/webp": string;
+            };
+        };
+        responses: {
+            /** @description The private upload session was created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Upload"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            /** @description The upload exceeds the configured size limit. */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The MIME type is not allowed. */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    finalizeMediaUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                upload_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinalizeUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description The upload was finalized and the asset metadata is returned. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Asset"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    listNavigationMenus: {
+        parameters: {
+            query?: {
+                after_id?: string;
+                after_updated_at?: string;
+                enabled?: boolean;
+                limit?: number;
+                locale_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Account-scoped menus in stable updated-at/id order. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MenuListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    createNavigationMenu: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MenuMutationRequest"];
+            };
+        };
+        responses: {
+            /** @description The menu was created with stable item IDs. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Menu"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    getNavigationMenu: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                menu_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The menu and its ordered tree. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Menu"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    deleteNavigationMenu: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                menu_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ExpectedVersionRequest"];
+            };
+        };
+        responses: {
+            /** @description The menu was soft-deleted. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+        };
+    };
+    updateNavigationMenu: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                menu_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MenuMutationRequest"] & {
+                    expected_version: number;
+                };
+            };
+        };
+        responses: {
+            /** @description The menu was updated and versions advanced. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Menu"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    reorderNavigationMenu: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                menu_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MenuReorderRequest"];
+            };
+        };
+        responses: {
+            /** @description The reordered menu tree. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Menu"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["BadRequest"];
         };
     };
     listEnabledModules: {
