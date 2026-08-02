@@ -18,6 +18,7 @@ import { listEnabledModules } from "@/modules/operations/api/modules.client";
 import { createAPIClient } from "@/shared/api/client";
 import { createCSRFTokenProvider } from "@/shared/api/csrf";
 import { errorFromResponse } from "@/shared/api/errors";
+import { buildAdminNavigationItems } from "@/app/navigation";
 
 interface BootstrapSession {
   state: "authenticated";
@@ -124,6 +125,8 @@ export async function bootstrapAdmin(target = "#app"): Promise<void> {
       retry: () => globalThis.location.reload(),
     },
     authorization: { client },
+    cms: { client },
+    navigation: () => buildAdminNavigationItems(enabledModuleIDs, permissions),
   }, {
     isAuthenticated: () => accessState.authenticated,
     isMfaPending: () => accessState.mfaPending,
@@ -136,6 +139,7 @@ export async function bootstrapAdmin(target = "#app"): Promise<void> {
     .use(router)
     .mount(target);
 }
+
 
 export function createClientForConfig(config: RuntimeConfig) {
   const csrf = createCSRFTokenProvider(config.apiBaseUrl);

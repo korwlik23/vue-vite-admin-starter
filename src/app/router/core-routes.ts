@@ -19,6 +19,7 @@ import CatalogEditorView from "@/modules/localization/views/CatalogEditorView.vu
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import NotFoundState from "@/shared/components/feedback/NotFoundState.vue";
 import type { APIClient } from "@/shared/api/client";
+import { createCMSRoutes } from "./cms-routes";
 
 export interface CoreRouteDependencies {
   login: {
@@ -47,6 +48,8 @@ export interface CoreRouteDependencies {
     client: APIClient;
     accountID?: string | (() => string | undefined);
   };
+  cms?: { client: APIClient };
+  navigation?: () => readonly { id: string; label: string; href: string }[];
 }
 
 export function createCoreRoutes(
@@ -59,6 +62,7 @@ export function createCoreRoutes(
       component: FoundationStatusView,
       props: () => ({
         ...dependencies.foundation,
+        navigationItems: dependencies.navigation?.(),
         state: resolveValue(dependencies.foundation.state),
         enabledModules:
           typeof dependencies.foundation.enabledModules === "function"
@@ -156,6 +160,9 @@ export function createCoreRoutes(
         requiredPermission: "localization.translations.update.system",
       },
     });
+  }
+  if (dependencies.cms !== undefined) {
+    children.push(...createCMSRoutes(dependencies.cms));
   }
   return [
     {

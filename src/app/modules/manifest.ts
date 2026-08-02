@@ -10,4 +10,8 @@ export const moduleManifest: readonly AdminModule[] = [
   { id: "operations", activate: () => undefined },
   { id: "authorization", activate: () => undefined },
   { id: "localization", activate: () => undefined },
+  { id: "publishing", activate: () => undefined },
+  { id: "media", activate: () => undefined },
+  { id: "navigation", activate: () => undefined },
+  { id: "discoverability", activate: () => undefined },
 ];
