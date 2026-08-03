@@ -30,5 +30,6 @@ describe("audit and operations read adapters", () => {
     const modules = await listEnabledModules(client);
 
     expect(modules).toEqual([{ id: "operations", enabled: true, reconcile_revision: 3 }]);
+    expect(client.request).toHaveBeenCalledWith("/operations/modules");
   });
 });

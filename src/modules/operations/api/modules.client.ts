@@ -7,7 +7,7 @@ type ModuleState = components["schemas"]["ModuleState"];
 export async function listEnabledModules(
   client: APIClient,
 ): Promise<ModuleState[]> {
-  const response = await client.request("/modules/enabled");
+  const response = await client.request("/operations/modules");
   if (!response.ok) {
     throw await errorFromResponse(response);
   }
