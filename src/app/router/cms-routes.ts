@@ -11,54 +11,34 @@ import MenuListView from "@/modules/navigation/views/MenuListView.vue";
 import RedirectsView from "@/modules/discoverability/views/RedirectsView.vue";
 import DiscoverabilityView from "@/modules/discoverability/views/DiscoverabilityView.vue";
 import type { APIClient } from "@/shared/api/client";
-import type { Menu } from "@/modules/navigation/api/menus.client";
-import type { SEODefaults } from "@/modules/discoverability/api/settings.client";
+import CMSRouteLoader, { type CMSRouteAdapterFactory } from "@/app/router/cms/CMSRouteLoader.vue";
+import {
+  contentEditorAdapter,
+  contentListAdapter,
+  reviewQueueAdapter,
+  revisionHistoryAdapter,
+  schedulesAdapter,
+} from "@/app/router/cms/adapters/publishing";
+import { mediaLibraryAdapter } from "@/app/router/cms/adapters/media";
+import { menuEditorAdapter, menuListAdapter } from "@/app/router/cms/adapters/navigation";
+import { discoverabilityAdapter, redirectsAdapter } from "@/app/router/cms/adapters/discoverability";
 
 export interface CMSRouteDependencies {
   client: APIClient;
 }
 
-export function createCMSRoutes(_dependencies: CMSRouteDependencies): RouteRecordRaw[] {
-  void _dependencies;
-  const emptyMenu: Menu = {
-    account_id: "",
-    created_at: "",
-    enabled: false,
-    id: "",
-    items: [],
-    key: "",
-    locale_id: "",
-    name: "Menu",
-    updated_at: "",
-    version: 1,
-  };
-  const emptySEO: SEODefaults = {
-    id: "",
-    account_id: "",
-    locale_id: "",
-    title: "",
-    description: "",
-    canonical_base: "https://example.invalid",
-    robots: "index,follow",
-    version: 1,
-    created_at: "",
-    updated_at: "",
-  };
-  const unavailable = async (): Promise<never> => {
-    throw new Error("CMS route data provider is not configured");
-  };
-
+export function createCMSRoutes(dependencies: CMSRouteDependencies): RouteRecordRaw[] {
   return [
-    route("publishing-content", "publishing/content", ContentList, "publishing", "publishing.pages.read.own", { items: [] }),
-    route("publishing-content-create", "publishing/content/new", ContentEditor, "publishing", "publishing.pages.write.own", { mode: "create" }),
-    route("publishing-review", "publishing/review", ReviewQueue, "publishing", "publishing.pages.review.any", { items: [], transition: unavailable }),
-    route("publishing-revisions", "publishing/content/:contentID/revisions", RevisionHistory, "publishing", "publishing.revisions.read.own", { contentID: "", rollback: unavailable }),
-    route("publishing-schedules", "publishing/schedules", ScheduleView, "publishing", "publishing.pages.publish.any", { schedules: [], createSchedule: unavailable, cancelSchedule: unavailable }),
-    route("media-library", "media", MediaLibraryView, "media", "media.assets.read.own", { assets: [], upload: unavailable, remove: unavailable }),
-    route("navigation-menus", "navigation/menus", MenuListView, "navigation", "navigation.menus.read.own", { menus: [] }),
-    route("navigation-menu-editor", "navigation/menus/:menuID", MenuEditorView, "navigation", "navigation.menus.write.own", { menu: emptyMenu, save: unavailable }),
-    route("discoverability-redirects", "discoverability/redirects", RedirectsView, "discoverability", "discoverability.redirects.read.own", { redirects: [], create: unavailable, update: unavailable, remove: unavailable }),
-    route("discoverability-settings", "discoverability", DiscoverabilityView, "discoverability", "discoverability.seo.read.own", { audits: [], seo: emptySEO, runAudit: unavailable, saveSEO: unavailable }),
+    route("publishing-content", "publishing/content", ContentList, "publishing", "publishing.pages.read.own", contentListAdapter, dependencies),
+    route("publishing-content-create", "publishing/content/new", ContentEditor, "publishing", "publishing.pages.write.own", (client) => contentEditorAdapter(client), dependencies),
+    route("publishing-review", "publishing/review", ReviewQueue, "publishing", "publishing.pages.review.any", reviewQueueAdapter, dependencies),
+    route("publishing-revisions", "publishing/content/:contentID/revisions", RevisionHistory, "publishing", "publishing.revisions.read.own", revisionHistoryAdapter, dependencies),
+    route("publishing-schedules", "publishing/schedules", ScheduleView, "publishing", "publishing.pages.publish.any", (client) => schedulesAdapter(client), dependencies),
+    route("media-library", "media", MediaLibraryView, "media", "media.assets.read.own", (client) => mediaLibraryAdapter(client), dependencies),
+    route("navigation-menus", "navigation/menus", MenuListView, "navigation", "navigation.menus.read.own", menuListAdapter, dependencies),
+    route("navigation-menu-editor", "navigation/menus/:menuID", MenuEditorView, "navigation", "navigation.menus.write.own", menuEditorAdapter, dependencies),
+    route("discoverability-redirects", "discoverability/redirects", RedirectsView, "discoverability", "discoverability.redirects.read.own", (client) => redirectsAdapter(client), dependencies),
+    route("discoverability-settings", "discoverability", DiscoverabilityView, "discoverability", "discoverability.seo.read.own", discoverabilityAdapter, dependencies),
   ];
 }
 
@@ -68,13 +48,14 @@ function route(
   component: NonNullable<RouteRecordRaw["component"]>,
   requiredModule: string,
   requiredPermission: string,
-  props: Record<string, unknown>,
+  factory: CMSRouteAdapterFactory,
+  dependencies: CMSRouteDependencies,
 ): RouteRecordRaw {
   return {
     path,
     name,
-    component,
-    props,
+    component: CMSRouteLoader,
+    props: { view: component, client: dependencies.client, factory },
     meta: { requiresAuthentication: true, requiredModule, requiredPermission },
   };
 }

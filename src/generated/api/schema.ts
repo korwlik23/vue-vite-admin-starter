@@ -798,7 +798,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** List page translations in the current account. */
+        get: operations["listPublishingPages"];
         put?: never;
         /** Create a page translation in the current account. */
         post: operations["createPublishingPage"];
@@ -817,7 +818,8 @@ export interface paths {
             };
             cookie?: never;
         };
-        get?: never;
+        /** Get a page translation in the current account. */
+        get: operations["getPublishingPage"];
         put?: never;
         post?: never;
         /** Soft-delete a page translation using optimistic concurrency. */
@@ -835,7 +837,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** List post translations in the current account. */
+        get: operations["listPublishingPosts"];
         put?: never;
         /** Create a post translation in the current account. */
         post: operations["createPublishingPost"];
@@ -854,7 +857,8 @@ export interface paths {
             };
             cookie?: never;
         };
-        get?: never;
+        /** Get a post translation in the current account. */
+        get: operations["getPublishingPost"];
         put?: never;
         post?: never;
         /** Soft-delete a post translation using optimistic concurrency. */
@@ -1107,12 +1111,46 @@ export interface components {
             items: components["schemas"]["ContentAudit"][];
             next?: components["schemas"]["ContentAuditCursor"];
         };
+        ContentCursor: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            updated_at: string;
+        };
         ContentDeleteRequest: {
             expected_version: number;
             /** Format: uuid */
             locale_id: string;
             /** Format: uuid */
             translation_id: string;
+        };
+        ContentListItem: {
+            /** Format: uuid */
+            account_id: string;
+            /** Format: uuid */
+            content_id: string;
+            content_key: string;
+            /** @enum {string} */
+            content_status: "draft" | "review" | "published" | "scheduled" | "archived";
+            content_version: number;
+            /** @enum {string} */
+            kind: "page" | "post";
+            /** Format: uuid */
+            locale_id: string;
+            path: string;
+            slug: string;
+            title: string;
+            /** Format: uuid */
+            translation_id: string;
+            /** @enum {string} */
+            translation_status: "draft" | "review" | "published" | "scheduled" | "archived";
+            translation_version: number;
+            /** Format: date-time */
+            updated_at: string;
+        };
+        ContentListResponse: {
+            items: components["schemas"]["ContentListItem"][];
+            next?: components["schemas"]["ContentCursor"];
         };
         ContentMutationRequest: {
             aeo: components["schemas"]["AEOFields"];
@@ -1881,6 +1919,10 @@ export interface components {
         };
     };
     parameters: {
+        ContentAfterID: string;
+        ContentAfterUpdatedAt: string;
+        ContentLimit: number;
+        ContentLocale: string;
         /** @description One-based page number. */
         Page: number;
         /** @description Requested page size. The API enforces the upper bound. */
@@ -3572,6 +3614,34 @@ export interface operations {
             422: components["responses"]["BadRequest"];
         };
     };
+    listPublishingPages: {
+        parameters: {
+            query: {
+                after_id?: components["parameters"]["ContentAfterID"];
+                after_updated_at?: components["parameters"]["ContentAfterUpdatedAt"];
+                limit?: components["parameters"]["ContentLimit"];
+                locale: components["parameters"]["ContentLocale"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Page translations. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentListResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
     createPublishingPage: {
         parameters: {
             query?: never;
@@ -3604,6 +3674,34 @@ export interface operations {
             409: components["responses"]["Conflict"];
             415: components["responses"]["UnsupportedMediaType"];
             422: components["responses"]["BadRequest"];
+        };
+    };
+    getPublishingPage: {
+        parameters: {
+            query: {
+                locale: components["parameters"]["ContentLocale"];
+            };
+            header?: never;
+            path: {
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Page translation. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
         };
     };
     deletePublishingPage: {
@@ -3669,6 +3767,34 @@ export interface operations {
             422: components["responses"]["BadRequest"];
         };
     };
+    listPublishingPosts: {
+        parameters: {
+            query: {
+                after_id?: components["parameters"]["ContentAfterID"];
+                after_updated_at?: components["parameters"]["ContentAfterUpdatedAt"];
+                limit?: components["parameters"]["ContentLimit"];
+                locale: components["parameters"]["ContentLocale"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Post translations. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentListResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
     createPublishingPost: {
         parameters: {
             query?: never;
@@ -3701,6 +3827,34 @@ export interface operations {
             409: components["responses"]["Conflict"];
             415: components["responses"]["UnsupportedMediaType"];
             422: components["responses"]["BadRequest"];
+        };
+    };
+    getPublishingPost: {
+        parameters: {
+            query: {
+                locale: components["parameters"]["ContentLocale"];
+            };
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Post translation. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
         };
     };
     deletePublishingPost: {

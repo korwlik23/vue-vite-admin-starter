@@ -2,6 +2,7 @@ import { createMemoryHistory, createRouter } from "vue-router";
 import { describe, expect, it, vi } from "vitest";
 
 import { createCMSRoutes } from "@/app/router/cms-routes";
+import CMSRouteLoader from "@/app/router/cms/CMSRouteLoader.vue";
 import { installAccessGuards } from "@/app/router/guards/access";
 import type { APIClient } from "@/shared/api/client";
 
@@ -13,6 +14,8 @@ describe("D5", () => {
     expect(media?.meta).toMatchObject({ requiredModule: "media", requiredPermission: "media.assets.read.own" });
     expect(publishing?.meta).toMatchObject({ requiredModule: "publishing", requiredPermission: "publishing.pages.read.own" });
     expect(routes.some((route) => route.path.includes(":locale"))).toBe(false);
+    expect(routes.every((route) => route.component === CMSRouteLoader)).toBe(true);
+    expect(routes.every((route) => typeof (route.props as { factory?: unknown }).factory === "function")).toBe(true);
   });
 
   it("returns 404 for a disabled module and 403 for a missing permission", async () => {

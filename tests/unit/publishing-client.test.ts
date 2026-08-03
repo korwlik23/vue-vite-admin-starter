@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  createPublishingPage,
-  deletePublishingPage,
-  updatePublishingPage,
+	createPublishingPage,
+	deletePublishingPage,
+	listPublishingPages,
+	updatePublishingPage,
 } from "@/modules/publishing/api/content.client";
 import {
   listPublishingRevisions,
@@ -81,7 +82,41 @@ function problemResponse(status: number, code: string) {
 }
 
 describe("D2 publishing clients", () => {
-  it("creates content through the typed page contract", async () => {
+	it("lists content with a locale and opaque cursor", async () => {
+		const client = clientWith(jsonResponse({
+			items: [{
+				content_id: content.content_id,
+				account_id: content.account_id,
+				locale_id: content.locale_id,
+				kind: "page",
+				content_key: content.content_key,
+				content_status: "draft",
+				content_version: content.content_version,
+				translation_id: content.translation_id,
+				translation_status: "draft",
+				translation_version: content.translation_version,
+				slug: content.slug,
+				path: content.path,
+				title: content.title,
+				updated_at: "2026-08-02T00:00:00Z",
+			}],
+			next: { id: content.content_id, updated_at: "2026-08-02T00:00:00Z" },
+		}));
+
+		const result = await listPublishingPages(client, {
+			locale: "en",
+			limit: 25,
+			afterUpdatedAt: "2026-08-01T00:00:00Z",
+			afterId: content.content_id,
+		});
+
+		expect(result.items[0]?.title).toBe("Home");
+		expect(client.request).toHaveBeenCalledWith(
+			`/publishing/pages?locale=en&limit=25&after_updated_at=2026-08-01T00%3A00%3A00Z&after_id=${content.content_id}`,
+		);
+	});
+
+	it("creates content through the typed page contract", async () => {
     const client = clientWith(jsonResponse(content, 201));
 
     const result = await createPublishingPage(client, {

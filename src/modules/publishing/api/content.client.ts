@@ -3,6 +3,8 @@ import type { APIClient } from "@/shared/api/client";
 import { errorFromResponse } from "@/shared/api/errors";
 
 export type PublishingContent = components["schemas"]["ContentResponse"];
+export type PublishingContentListItem = components["schemas"]["ContentListItem"];
+export type PublishingContentList = components["schemas"]["ContentListResponse"];
 export type PublishingBlock = components["schemas"]["Block"];
 export type ContentMutationRequest = components["schemas"]["ContentMutationRequest"];
 export type ContentUpdateRequest = components["schemas"]["ContentUpdateRequest"];
@@ -17,6 +19,67 @@ export type CreatePublishingPostRequest = ContentMutationRequest & {
 };
 export type PreviewIssueRequest = components["schemas"]["PreviewIssueRequest"];
 export type PreviewIssueResponse = components["schemas"]["PreviewIssueResponse"];
+
+export interface PublishingContentListQuery {
+  locale: string;
+  limit?: number;
+  afterUpdatedAt?: string;
+  afterId?: string;
+}
+
+export async function listPublishingPages(
+  client: APIClient,
+  query: PublishingContentListQuery,
+): Promise<PublishingContentList> {
+  return listPublishingContent(client, "/publishing/pages", query);
+}
+
+export async function listPublishingPosts(
+  client: APIClient,
+  query: PublishingContentListQuery,
+): Promise<PublishingContentList> {
+  return listPublishingContent(client, "/publishing/posts", query);
+}
+
+export async function getPublishingPage(
+  client: APIClient,
+  pageID: string,
+  locale: string,
+): Promise<PublishingContent> {
+  return readJSON(
+    await client.request(`/publishing/pages/${encodeURIComponent(pageID)}?locale=${encodeURIComponent(locale)}`),
+    "publishing page",
+    isPublishingContent,
+  );
+}
+
+export async function getPublishingPost(
+  client: APIClient,
+  postID: string,
+  locale: string,
+): Promise<PublishingContent> {
+  return readJSON(
+    await client.request(`/publishing/posts/${encodeURIComponent(postID)}?locale=${encodeURIComponent(locale)}`),
+    "publishing post",
+    isPublishingContent,
+  );
+}
+
+async function listPublishingContent(
+  client: APIClient,
+  path: "/publishing/pages" | "/publishing/posts",
+  query: PublishingContentListQuery,
+): Promise<PublishingContentList> {
+  const params = new URLSearchParams({ locale: query.locale });
+  if (query.limit !== undefined) params.set("limit", String(query.limit));
+  if (query.afterUpdatedAt !== undefined) params.set("after_updated_at", query.afterUpdatedAt);
+  if (query.afterId !== undefined) params.set("after_id", query.afterId);
+  return readJSON(
+    await client.request(`${path}?${params.toString()}`),
+    "publishing content list",
+    isPublishingContentList,
+  );
+}
 
 export async function createPublishingPage(
   client: APIClient,
@@ -155,6 +218,24 @@ function isPublishingContent(value: unknown): value is PublishingContent {
     isGEO(value.geo) &&
     isAEO(value.aeo)
   );
+}
+
+function isPublishingContentList(value: unknown): value is PublishingContentList {
+  return isRecord(value) && Array.isArray(value.items) && value.items.every(isPublishingContentListItem) &&
+    (value.next === undefined || value.next === null || isContentCursor(value.next));
+}
+
+function isPublishingContentListItem(value: unknown): value is PublishingContentListItem {
+  return isRecord(value) && hasText(value, "content_id") && hasText(value, "account_id") &&
+    hasText(value, "locale_id") && hasText(value, "translation_id") && hasText(value, "content_key") &&
+    hasText(value, "slug") && hasText(value, "path") && hasText(value, "title") &&
+    isStatus(value.content_status) && isStatus(value.translation_status) &&
+    isPositiveInteger(value.content_version) && isPositiveInteger(value.translation_version) &&
+    hasText(value, "updated_at") && (value.kind === "page" || value.kind === "post");
+}
+
+function isContentCursor(value: unknown): boolean {
+  return isRecord(value) && hasText(value, "id") && hasText(value, "updated_at");
 }
 
 function isPreviewIssueResponse(value: unknown): value is PreviewIssueResponse {
