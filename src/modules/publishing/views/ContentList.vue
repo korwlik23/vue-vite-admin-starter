@@ -2,6 +2,7 @@
 /* eslint-disable vue/require-default-prop */
 import type { PublishingContent } from "@/modules/publishing/api/content.client";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = withDefaults(defineProps<{
   items?: readonly PublishingContent[];
@@ -48,13 +49,14 @@ const emit = defineEmits<{
     >
       <h2>We could not load content</h2>
       <p>{{ error }}</p>
-      <button
+      <UiButton
         v-if="retry"
+        variant="secondary"
         type="button"
         @click="retry()"
       >
         Try again
-      </button>
+      </UiButton>
     </section>
     <section
       v-else-if="props.items.length === 0"
@@ -102,12 +104,14 @@ const emit = defineEmits<{
             <td>{{ item.content_version }} / {{ item.translation_version }}</td>
             <td><span class="status">{{ item.content_status }}</span></td>
             <td>
-              <button
+              <UiButton
+                variant="secondary"
+                size="sm"
                 type="button"
                 @click="emit('select', item)"
               >
                 Open
-              </button>
+              </UiButton>
             </td>
           </tr>
         </tbody>

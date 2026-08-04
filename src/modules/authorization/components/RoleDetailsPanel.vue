@@ -4,6 +4,9 @@ import type {
   RoleAssignments,
   RolePermissions,
 } from "@/modules/authorization/api/roles.client";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
 
 defineProps<{
   role: Role;
@@ -55,20 +58,20 @@ function formatDate(value: string): string {
       >
         <label for="rename-role-name">
           Role name
-          <input
+          <UiInput
             id="rename-role-name"
-            :value="renameName"
+            :model-value="renameName"
             maxlength="128"
             required
-            @input="$emit('update:renameName', ($event.target as HTMLInputElement).value)"
-          >
+            @update:model-value="$emit('update:renameName', $event)"
+          />
         </label>
-        <button
+        <UiButton
           type="submit"
           :disabled="busy"
         >
           Save name
-        </button>
+        </UiButton>
       </form>
       <p class="metadata">
         Account: {{ role.account_id || "System" }} · Updated {{ formatDate(role.updated_at) }}
@@ -152,46 +155,46 @@ function formatDate(value: string): string {
       >
         <label for="assignment-user-id">
           User ID
-          <input
+          <UiInput
             id="assignment-user-id"
-            :value="assignmentUserId"
+            :model-value="assignmentUserId"
             autocomplete="off"
             required
             placeholder="user-…"
-            @input="$emit('update:assignmentUserId', ($event.target as HTMLInputElement).value)"
-          >
+            @update:model-value="$emit('update:assignmentUserId', $event)"
+          />
         </label>
         <label for="assignment-scope">
           Scope
-          <select
+          <UiSelect
             id="assignment-scope"
-            :value="assignmentScope"
-            @change="$emit('update:assignmentScope', ($event.target as HTMLSelectElement).value as 'account' | 'system')"
+            :model-value="assignmentScope"
+            @update:model-value="$emit('update:assignmentScope', $event as 'account' | 'system')"
           >
             <option value="account">Account</option>
             <option value="system">System</option>
-          </select>
+          </UiSelect>
         </label>
         <label
           v-if="assignmentScope === 'account'"
           for="assignment-account-id"
         >
           Account ID
-          <input
+          <UiInput
             id="assignment-account-id"
-            :value="assignmentAccountId"
+            :model-value="assignmentAccountId"
             autocomplete="off"
             required
-            @input="$emit('update:assignmentAccountId', ($event.target as HTMLInputElement).value)"
-          >
+            @update:model-value="$emit('update:assignmentAccountId', $event)"
+          />
         </label>
-        <button
+        <UiButton
           class="primary-button"
           type="submit"
           :disabled="busy"
         >
           Assign role
-        </button>
+        </UiButton>
       </form>
       <div
         v-if="assignments && assignments.items.length > 0"
@@ -228,14 +231,14 @@ function formatDate(value: string): string {
               <td>{{ assignment.scope }}</td>
               <td>{{ formatDate(assignment.created_at) }}</td>
               <td>
-                <button
+                <UiButton
                   class="quiet-button"
                   type="button"
                   :disabled="busy"
                   @click="$emit('revoke', assignment.assignment_id)"
                 >
                   Revoke
-                </button>
+                </UiButton>
               </td>
             </tr>
           </tbody>

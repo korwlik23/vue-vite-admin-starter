@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UiButton from "@/shared/components/ui/UiButton.vue";
+
 defineProps<{
   accountName?: string | undefined;
   navigationOpen?: boolean;
@@ -11,7 +13,9 @@ defineEmits<{
 
 <template>
   <header class="admin-header">
-    <button
+    <UiButton
+      variant="ghost"
+      size="sm"
       class="navigation-toggle"
       type="button"
       aria-label="Toggle navigation"
@@ -20,7 +24,7 @@ defineEmits<{
       @click="$emit('toggleNavigation')"
     >
       Menu
-    </button>
+    </UiButton>
     <div>
       <p class="eyebrow">
         TEWARACH · ADMIN

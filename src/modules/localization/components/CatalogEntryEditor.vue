@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+
 const props = defineProps<{
   modelValue: Record<string, string>;
   filter?: string;
@@ -46,26 +49,26 @@ function add(): void {
     >
       <label>
         New key
-        <input
+        <UiInput
           v-model="newKey"
           :disabled="disabled"
           placeholder="navigation.save"
-        >
+        />
       </label>
       <label>
         Value
-        <input
+        <UiInput
           v-model="newValue"
           :disabled="disabled"
           placeholder="Save"
-        >
+        />
       </label>
-      <button
+      <UiButton
         type="submit"
         :disabled="disabled || !newKey.trim()"
       >
         Add key
-      </button>
+      </UiButton>
     </form>
     <p
       v-if="entries.length === 0"
@@ -101,20 +104,22 @@ function add(): void {
               <code>{{ key }}</code>
             </th>
             <td>
-              <input
-                :value="value"
+              <UiInput
+                :model-value="value"
                 :disabled="disabled"
-                @input="update(key, ($event.target as HTMLInputElement).value)"
-              >
+                @update:model-value="update(key, $event)"
+              />
             </td>
             <td>
-              <button
+              <UiButton
+                variant="danger"
+                size="sm"
                 type="button"
                 :disabled="disabled"
                 @click="remove(key)"
               >
                 Remove
-              </button>
+              </UiButton>
             </td>
           </tr>
         </tbody>

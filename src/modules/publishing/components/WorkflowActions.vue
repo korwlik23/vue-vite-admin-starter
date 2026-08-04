@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { WorkflowRequest } from "@/modules/publishing/api/workflow.client";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = withDefaults(defineProps<{
   actions?: readonly WorkflowRequest["action"][];
@@ -29,16 +30,18 @@ const labels: Record<WorkflowRequest["action"], string> = {
     class="workflow-actions"
     aria-label="Publishing workflow actions"
   >
-    <button
+    <UiButton
       v-for="action in props.actions"
       :key="action"
+      variant="secondary"
+      size="sm"
       type="button"
       :aria-label="`${labels[action]} ${labelPrefix}`"
       :disabled="disabled"
       @click="emit('action', action)"
     >
       {{ labels[action] }}
-    </button>
+    </UiButton>
   </div>
 </template>
 

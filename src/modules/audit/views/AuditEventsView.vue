@@ -4,6 +4,8 @@ import { onMounted, ref } from "vue";
 import { listAuditEvents, type AuditEvent } from "@/modules/audit/api/events.client";
 import type { APIClient } from "@/shared/api/client";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
 
 const props = defineProps<{ client: APIClient }>();
 const events = ref<AuditEvent[]>([]);
@@ -54,20 +56,20 @@ function isRecord(value: unknown): value is Record<string, unknown> { return typ
       class="filters"
       @submit.prevent="loadEvents()"
     >
-      <label>Action<input
+      <label>Action<UiInput
         v-model="action"
         autocomplete="off"
         placeholder="authorization.role.updated"
-      ></label><label>Actor ID<input
+      /></label><label>Actor ID<UiInput
         v-model="actorID"
         autocomplete="off"
         placeholder="user UUID"
-      ></label><button
+      /></label><UiButton
         type="submit"
         :disabled="loading"
       >
         Refresh
-      </button>
+      </UiButton>
     </form>
     <p
       v-if="errorMessage"
@@ -116,14 +118,16 @@ function isRecord(value: unknown): value is Record<string, unknown> { return typ
             <td><time :datetime="event.recorded_at">{{ event.recorded_at }}</time></td><td>{{ event.action }}</td><td>{{ event.actor_id ?? event.actor_type }}</td><td><code>{{ displayData(event) }}</code></td>
           </tr>
         </tbody>
-      </table><button
+      </table><UiButton
         v-if="nextCursor"
+        size="sm"
+        variant="secondary"
         type="button"
         :disabled="loading"
         @click="loadNext"
       >
         Load more
-      </button>
+      </UiButton>
     </div>
   </section>
 </template>

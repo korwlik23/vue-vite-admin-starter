@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Asset } from "@/modules/media/api/assets.client";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 defineProps<{
   asset: Asset;
@@ -29,14 +30,16 @@ const emit = defineEmits<{
         Version {{ asset.version }}
       </p>
     </div>
-    <button
+    <UiButton
+      variant="danger"
+      size="sm"
       type="button"
       :aria-label="`Delete asset ${asset.original_name}`"
       :disabled="disabled"
       @click="emit('remove', asset)"
     >
       Delete
-    </button>
+    </UiButton>
   </article>
 </template>
 

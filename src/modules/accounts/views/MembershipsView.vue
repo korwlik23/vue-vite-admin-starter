@@ -4,6 +4,9 @@ import { onMounted, ref } from "vue";
 import { listMemberships, updateMembershipStatus, type Membership } from "@/modules/accounts/api/memberships.client";
 import type { APIClient } from "@/shared/api/client";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
 
 const props = defineProps<{ client: APIClient; accountID?: string | (() => string | undefined) }>();
 const accountID = ref(resolveAccountID(props.accountID));
@@ -53,17 +56,17 @@ function resolveAccountID(value: string | (() => string | undefined) | undefined
       class="filters"
       @submit.prevent="loadMemberships"
     >
-      <label>Account ID<input
+      <label>Account ID<UiInput
         v-model="accountID"
         required
         autocomplete="off"
         placeholder="account UUID"
-      ></label><label>Status<select v-model="status"><option value="">All statuses</option><option value="active">Active</option><option value="disabled">Disabled</option></select></label><button
+      /></label><label>Status<UiSelect v-model="status"><option value="">All statuses</option><option value="active">Active</option><option value="disabled">Disabled</option></UiSelect></label><UiButton
         type="submit"
         :disabled="loading"
       >
         Load memberships
-      </button>
+      </UiButton>
     </form>
     <p
       v-if="errorMessage"
@@ -115,13 +118,15 @@ function resolveAccountID(value: string | (() => string | undefined) | undefined
                 :data-status="membership.status"
               >{{ membership.status }}</span>
             </td><td>
-              <button
+              <UiButton
+                size="sm"
+                variant="secondary"
                 type="button"
                 :disabled="busyID === membership.id"
                 @click="toggleStatus(membership)"
               >
                 {{ membership.status === "active" ? "Disable" : "Enable" }}
-              </button>
+              </UiButton>
             </td>
           </tr>
         </tbody>

@@ -9,6 +9,7 @@ import type { ContentMutation } from "@/modules/publishing/schemas/content.schem
 import { createPublishingContentSubmitter } from "@/modules/publishing/mutations/content.mutations";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = withDefaults(defineProps<{
   mode?: "create" | "edit";
@@ -102,13 +103,14 @@ function markDirty(value: boolean): void {
         role="alert"
       >
         {{ error || errorMessage }}
-        <button
+        <UiButton
           v-if="retry"
+          variant="secondary"
           type="button"
           @click="retry()"
         >
           Try again
-        </button>
+        </UiButton>
       </p>
       <p
         v-if="notice"

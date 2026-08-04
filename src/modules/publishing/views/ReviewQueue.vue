@@ -7,6 +7,7 @@ import type { WorkflowRequest } from "@/modules/publishing/api/workflow.client";
 import WorkflowActions from "@/modules/publishing/components/WorkflowActions.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = withDefaults(defineProps<{
   items?: readonly PublishingContent[];
@@ -77,13 +78,14 @@ async function runTransition(item: PublishingContent, action: WorkflowRequest["a
     >
       <h2>Review queue unavailable</h2>
       <p>{{ error || localError }}</p>
-      <button
+      <UiButton
         v-if="retry"
+        variant="secondary"
         type="button"
         @click="retry()"
       >
         Try again
-      </button>
+      </UiButton>
     </section>
     <p
       v-if="notice"

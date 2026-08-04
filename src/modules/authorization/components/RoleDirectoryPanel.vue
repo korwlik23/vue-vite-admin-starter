@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { Role } from "@/modules/authorization/api/roles.client";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
 
 defineProps<{
   roles: readonly Role[];
@@ -42,35 +44,35 @@ defineEmits<{
       <div class="field-grid">
         <label for="account-id">
           Account ID
-          <input
+          <UiInput
             id="account-id"
-            :value="accountId"
+            :model-value="accountId"
             autocomplete="off"
             required
             placeholder="account-…"
-            @input="$emit('update:accountId', ($event.target as HTMLInputElement).value)"
-          >
+            @update:model-value="$emit('update:accountId', $event)"
+          />
         </label>
         <label for="role-name">
           Role name
-          <input
+          <UiInput
             id="role-name"
-            :value="createName"
+            :model-value="createName"
             autocomplete="off"
             maxlength="128"
             required
             placeholder="Editors"
-            @input="$emit('update:createName', ($event.target as HTMLInputElement).value)"
-          >
+            @update:model-value="$emit('update:createName', $event)"
+          />
         </label>
       </div>
-      <button
+      <UiButton
         class="primary-button"
         type="submit"
         :disabled="busy"
       >
         Create role
-      </button>
+      </UiButton>
     </form>
 
     <div
@@ -107,14 +109,14 @@ defineEmits<{
             :class="{ selected: role.id === selectedRoleId }"
           >
             <td>
-              <button
+              <UiButton
                 class="table-select"
                 type="button"
                 :aria-pressed="role.id === selectedRoleId"
                 @click="$emit('select', role.id)"
               >
                 {{ role.name }}
-              </button>
+              </UiButton>
               <small>{{ role.id }}</small>
             </td>
             <td>{{ role.owner_type }}</td>

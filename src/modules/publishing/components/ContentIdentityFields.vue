@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
+import UiTextarea from "@/shared/components/ui/UiTextarea.vue";
+
 export interface ContentIdentityState {
   kind: "page" | "post";
   content_key: string;
@@ -27,59 +31,59 @@ function update(field: keyof ContentIdentityState, value: string): void {
 
 <template>
   <div class="form-grid">
-    <label>Content type<select
-      :value="modelValue.kind"
+    <label>Content type<UiSelect
+      :model-value="modelValue.kind"
       name="kind"
-      @change="update('kind', ($event.target as HTMLSelectElement).value)"
-    ><option value="page">Page</option><option value="post">Post</option></select></label>
-    <label>Locale<input
+      @update:model-value="update('kind', String($event))"
+    ><option value="page">Page</option><option value="post">Post</option></UiSelect></label>
+    <label>Locale<UiInput
       name="locale"
-      :value="modelValue.locale"
+      :model-value="modelValue.locale"
       required
       autocomplete="language"
-      @input="update('locale', ($event.target as HTMLInputElement).value)"
-    ><small v-if="errorFor('locale')">{{ errorFor("locale") }}</small></label>
-    <label>Content key<input
+      @update:model-value="update('locale', $event)"
+    /><small v-if="errorFor('locale')">{{ errorFor("locale") }}</small></label>
+    <label>Content key<UiInput
       name="content_key"
-      :value="modelValue.content_key"
+      :model-value="modelValue.content_key"
       :required="mode === 'create'"
       placeholder="home"
-      @input="update('content_key', ($event.target as HTMLInputElement).value)"
-    ><small v-if="errorFor('content_key')">{{ errorFor("content_key") }}</small></label>
-    <label>Translation ID<input
+      @update:model-value="update('content_key', $event)"
+    /><small v-if="errorFor('content_key')">{{ errorFor("content_key") }}</small></label>
+    <label>Translation ID<UiInput
       name="translation_id"
-      :value="modelValue.translation_id"
+      :model-value="modelValue.translation_id"
       :required="mode === 'edit'"
       autocomplete="off"
-      @input="update('translation_id', ($event.target as HTMLInputElement).value)"
-    ><small v-if="errorFor('translation_id')">{{ errorFor("translation_id") }}</small></label>
-    <label>Slug<input
+      @update:model-value="update('translation_id', $event)"
+    /><small v-if="errorFor('translation_id')">{{ errorFor("translation_id") }}</small></label>
+    <label>Slug<UiInput
       name="slug"
-      :value="modelValue.slug"
+      :model-value="modelValue.slug"
       required
       placeholder="home"
-      @input="update('slug', ($event.target as HTMLInputElement).value)"
-    ><small v-if="errorFor('slug')">{{ errorFor("slug") }}</small></label>
-    <label>Path<input
+      @update:model-value="update('slug', $event)"
+    /><small v-if="errorFor('slug')">{{ errorFor("slug") }}</small></label>
+    <label>Path<UiInput
       name="path"
-      :value="modelValue.path"
+      :model-value="modelValue.path"
       required
       placeholder="/home"
-      @input="update('path', ($event.target as HTMLInputElement).value)"
-    ><small v-if="errorFor('path')">{{ errorFor("path") }}</small></label>
+      @update:model-value="update('path', $event)"
+    /><small v-if="errorFor('path')">{{ errorFor("path") }}</small></label>
   </div>
-  <label>Title<input
+  <label>Title<UiInput
     name="title"
-    :value="modelValue.title"
+    :model-value="modelValue.title"
     required
     autocomplete="off"
-    @input="update('title', ($event.target as HTMLInputElement).value)"
-  ><small v-if="errorFor('title')">{{ errorFor("title") }}</small></label>
-  <label>Excerpt<textarea
+    @update:model-value="update('title', $event)"
+  /><small v-if="errorFor('title')">{{ errorFor("title") }}</small></label>
+  <label>Excerpt<UiTextarea
     name="excerpt"
-    :value="modelValue.excerpt"
-    rows="3"
-    @input="update('excerpt', ($event.target as HTMLTextAreaElement).value)"
+    :model-value="modelValue.excerpt"
+    :rows="3"
+    @update:model-value="update('excerpt', $event)"
   /><small v-if="errorFor('excerpt')">{{ errorFor("excerpt") }}</small></label>
 </template>
 

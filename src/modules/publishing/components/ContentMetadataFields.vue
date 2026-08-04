@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ContentMutation } from "@/modules/publishing/schemas/content.schema";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiTextarea from "@/shared/components/ui/UiTextarea.vue";
 
 defineProps<{
   seo: NonNullable<ContentMutation["seo"]>;
@@ -17,51 +19,51 @@ const emit = defineEmits<{
 <template>
   <fieldset class="metadata-grid">
     <legend>SEO</legend>
-    <label>SEO title<input
-      :value="seo.title"
+    <label>SEO title<UiInput
+      :model-value="seo.title"
       name="seo_title"
-      @input="emit('update:seo', { ...seo, title: ($event.target as HTMLInputElement).value })"
-    ></label>
-    <label>SEO description<textarea
-      :value="seo.description"
-      name="seo_description"
-      rows="2"
-      @input="emit('update:seo', { ...seo, description: ($event.target as HTMLTextAreaElement).value })"
+      @update:model-value="emit('update:seo', { ...seo, title: $event })"
     /></label>
-    <label>Canonical URL<input
-      :value="seo.canonical_url"
+    <label>SEO description<UiTextarea
+      :model-value="seo.description"
+      name="seo_description"
+      :rows="2"
+      @update:model-value="emit('update:seo', { ...seo, description: $event })"
+    /></label>
+    <label>Canonical URL<UiInput
+      :model-value="seo.canonical_url"
       name="canonical_url"
       placeholder="https://example.com/home"
-      @input="emit('update:seo', { ...seo, canonical_url: ($event.target as HTMLInputElement).value })"
-    ></label>
-    <label>Robots<input
-      :value="seo.robots"
+      @update:model-value="emit('update:seo', { ...seo, canonical_url: $event })"
+    /></label>
+    <label>Robots<UiInput
+      :model-value="seo.robots"
       name="robots"
-      @input="emit('update:seo', { ...seo, robots: ($event.target as HTMLInputElement).value })"
-    ></label>
+      @update:model-value="emit('update:seo', { ...seo, robots: $event })"
+    /></label>
   </fieldset>
   <fieldset class="metadata-grid">
     <legend>GEO / AEO</legend>
-    <label>Region<input
-      :value="geo.region"
+    <label>Region<UiInput
+      :model-value="geo.region"
       name="geo_region"
-      @input="emit('update:geo', { ...geo, region: ($event.target as HTMLInputElement).value })"
-    ></label>
-    <label>Locality<input
-      :value="geo.locality"
+      @update:model-value="emit('update:geo', { ...geo, region: $event })"
+    /></label>
+    <label>Locality<UiInput
+      :model-value="geo.locality"
       name="geo_locality"
-      @input="emit('update:geo', { ...geo, locality: ($event.target as HTMLInputElement).value })"
-    ></label>
-    <label>Question<input
-      :value="aeo.question"
+      @update:model-value="emit('update:geo', { ...geo, locality: $event })"
+    /></label>
+    <label>Question<UiInput
+      :model-value="aeo.question"
       name="aeo_question"
-      @input="emit('update:aeo', { ...aeo, question: ($event.target as HTMLInputElement).value })"
-    ></label>
-    <label>Answer<textarea
-      :value="aeo.answer"
+      @update:model-value="emit('update:aeo', { ...aeo, question: $event })"
+    /></label>
+    <label>Answer<UiTextarea
+      :model-value="aeo.answer"
       name="aeo_answer"
-      rows="3"
-      @input="emit('update:aeo', { ...aeo, answer: ($event.target as HTMLTextAreaElement).value })"
+      :rows="3"
+      @update:model-value="emit('update:aeo', { ...aeo, answer: $event })"
     /></label>
   </fieldset>
 </template>

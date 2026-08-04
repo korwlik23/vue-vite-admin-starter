@@ -6,6 +6,9 @@ import type { Menu, MenuItem, MenuItemInput, MenuUpdateRequest } from "@/modules
 import MenuTreeEditor from "@/modules/navigation/components/MenuTreeEditor.vue";
 import { safeError } from "@/shared/api/errors";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiCheckbox from "@/shared/components/ui/UiCheckbox.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
 
 const props = defineProps<{
   menu: Menu;
@@ -117,26 +120,28 @@ async function removeMenu(): Promise<void> {
         Version {{ props.menu.version }} · {{ props.menu.locale_id }}
       </p>
       <div class="fields">
-        <label>Key<input
+        <label>Key<UiInput
           v-model.trim="draft.key"
           :disabled="busy"
           autocomplete="off"
-        ></label>
-        <label>Name<input
+        /></label>
+        <label>Name<UiInput
           v-model.trim="draft.name"
           :disabled="busy"
           autocomplete="off"
-        ></label>
-        <label>Locale ID<input
+        /></label>
+        <label>Locale ID<UiInput
           v-model.trim="draft.locale_id"
           :disabled="busy"
           autocomplete="off"
-        ></label>
-        <label class="enabled"><input
+        /></label>
+        <UiCheckbox
           v-model="draft.enabled"
-          type="checkbox"
+          class="enabled"
           :disabled="busy"
-        >Enabled</label>
+        >
+          Enabled
+        </UiCheckbox>
       </div>
       <div class="tree-section">
         <div>
@@ -164,16 +169,19 @@ async function removeMenu(): Promise<void> {
         {{ notice }}
       </p>
       <footer class="actions">
-        <button
+        <UiButton
+          :loading="busy"
+          loading-label="Saving…"
           type="button"
           :disabled="busy"
           :aria-label="`Save menu ${props.menu.name}`"
           @click="saveMenu"
         >
-          {{ busy ? "Saving…" : "Save menu" }}
-        </button>
-        <button
+          Save menu
+        </UiButton>
+        <UiButton
           v-if="props.remove"
+          variant="danger"
           type="button"
           class="danger"
           :disabled="busy"
@@ -181,7 +189,7 @@ async function removeMenu(): Promise<void> {
           @click="removeMenu"
         >
           Delete menu
-        </button>
+        </UiButton>
       </footer>
     </section>
   </section>

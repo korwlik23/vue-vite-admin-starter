@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiField from "@/shared/components/ui/UiField.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiRadio from "@/shared/components/ui/UiRadio.vue";
+
 type Method = "totp" | "recovery_code";
 
 const props = defineProps<{
@@ -45,45 +50,43 @@ async function submit(): Promise<void> {
   >
     <fieldset v-if="methods.length > 1">
       <legend>Verification method</legend>
-      <label>
-        <input
-          v-model="method"
-          type="radio"
-          value="totp"
-        >
+      <UiRadio
+        v-model="method"
+        value="totp"
+        name="mfa-method"
+      >
         Authenticator app
-      </label>
-      <label>
-        <input
-          v-model="method"
-          type="radio"
-          value="recovery_code"
-        >
+      </UiRadio>
+      <UiRadio
+        v-model="method"
+        value="recovery_code"
+        name="mfa-method"
+      >
         Recovery code
-      </label>
+      </UiRadio>
     </fieldset>
-    <label for="mfa-code">{{ label }}</label>
-    <input
+    <UiField
       id="mfa-code"
-      v-model="code"
-      inputmode="numeric"
-      autocomplete="one-time-code"
-      :aria-invalid="Boolean(error)"
-      :aria-describedby="error ? 'mfa-error' : undefined"
+      :label="label"
+      :error="error"
     >
-    <p
-      v-if="error"
-      id="mfa-error"
-      role="alert"
-    >
-      {{ error }}
-    </p>
-    <button
+      <UiInput
+        id="mfa-code"
+        v-model="code"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        :aria-invalid="Boolean(error)"
+        :aria-describedby="error ? 'mfa-code-error' : undefined"
+      />
+    </UiField>
+    <UiButton
       type="submit"
+      :loading="pending"
+      loading-label="Verifying…"
       :disabled="pending"
     >
-      {{ pending ? "Verifying…" : "Verify" }}
-    </button>
+      Verify
+    </UiButton>
   </form>
 </template>
 

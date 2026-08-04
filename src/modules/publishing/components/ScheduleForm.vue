@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+
 export interface ScheduleDraft {
   translation_id: string;
   publish_at: string;
@@ -30,48 +33,50 @@ function update(field: keyof ScheduleDraft, value: string | number): void {
   >
     <h2>Create schedule</h2>
     <div class="form-grid">
-      <label>Translation ID<input
+      <label>Translation ID<UiInput
         name="translation_id"
-        :value="modelValue.translation_id"
+        :model-value="modelValue.translation_id"
         required
         autocomplete="off"
-        @input="update('translation_id', ($event.target as HTMLInputElement).value)"
-      ></label>
-      <label>Publish at<input
+        @update:model-value="update('translation_id', $event)"
+      /></label>
+      <label>Publish at<UiInput
         name="publish_at"
         type="datetime-local"
-        :value="modelValue.publish_at"
+        :model-value="modelValue.publish_at"
         required
-        @input="update('publish_at', ($event.target as HTMLInputElement).value)"
-      ></label>
-      <label>Unpublish at<input
+        @update:model-value="update('publish_at', $event)"
+      /></label>
+      <label>Unpublish at<UiInput
         name="unpublish_at"
         type="datetime-local"
-        :value="modelValue.unpublish_at"
-        @input="update('unpublish_at', ($event.target as HTMLInputElement).value)"
-      ></label>
-      <label>Expected version<input
+        :model-value="modelValue.unpublish_at"
+        @update:model-value="update('unpublish_at', $event)"
+      /></label>
+      <label>Expected version<UiInput
         name="expected_version"
         type="number"
         min="1"
         required
-        :value="modelValue.expected_version"
-        @input="update('expected_version', Number(($event.target as HTMLInputElement).value))"
-      ></label>
-      <label>Idempotency key<input
+        :model-value="modelValue.expected_version"
+        @update:model-value="update('expected_version', Number($event))"
+      /></label>
+      <label>Idempotency key<UiInput
         name="idempotency_key"
-        :value="modelValue.idempotency_key"
+        :model-value="modelValue.idempotency_key"
         placeholder="Generated if empty"
         autocomplete="off"
-        @input="update('idempotency_key', ($event.target as HTMLInputElement).value)"
-      ></label>
+        @update:model-value="update('idempotency_key', $event)"
+      /></label>
     </div>
-    <button
+    <UiButton
+      :loading="disabled"
+      loading-label="Creating…"
       type="submit"
       :disabled="disabled"
     >
-      {{ disabled ? "Creating…" : "Create schedule" }}
-    </button>
+      Create schedule
+    </UiButton>
   </form>
 </template>
 

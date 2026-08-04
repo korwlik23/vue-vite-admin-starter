@@ -6,6 +6,7 @@ import type { PublishingSchedule, ScheduleRequest } from "@/modules/publishing/a
 import ScheduleForm, { type ScheduleDraft } from "@/modules/publishing/components/ScheduleForm.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = withDefaults(defineProps<{
   schedules?: readonly PublishingSchedule[];
@@ -106,13 +107,14 @@ async function cancel(schedule: PublishingSchedule): Promise<void> {
       >
         <h2>Schedules unavailable</h2>
         <p>{{ error || localError }}</p>
-        <button
+        <UiButton
           v-if="retry"
+          variant="secondary"
           type="button"
           @click="retry()"
         >
           Try again
-        </button>
+        </UiButton>
       </section>
       <p
         v-if="notice"
@@ -167,13 +169,15 @@ async function cancel(schedule: PublishingSchedule): Promise<void> {
               <td>{{ schedule.state }}</td>
               <td>{{ schedule.expected_version }}</td>
               <td>
-                <button
+                <UiButton
+                  variant="secondary"
+                  size="sm"
                   type="button"
                   :disabled="busyID === schedule.id || schedule.state !== 'pending'"
                   @click="cancel(schedule)"
                 >
                   Cancel
-                </button>
+                </UiButton>
               </td>
             </tr>
           </tbody>

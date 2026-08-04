@@ -4,6 +4,7 @@ import { onMounted, ref } from "vue";
 import { listEnabledModules } from "@/modules/operations/api/modules.client";
 import type { APIClient } from "@/shared/api/client";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = defineProps<{ client: APIClient }>();
 const modules = ref<Awaited<ReturnType<typeof listEnabledModules>>>([]);
@@ -32,12 +33,14 @@ async function loadModules(): Promise<void> { loading.value = true; errorMessage
       class="error-message"
       role="alert"
     >
-      {{ errorMessage }} <button
+      {{ errorMessage }} <UiButton
+        size="sm"
+        variant="secondary"
         type="button"
         @click="loadModules"
       >
         Retry
-      </button>
+      </UiButton>
     </p><div
       v-if="loading"
       class="panel state"

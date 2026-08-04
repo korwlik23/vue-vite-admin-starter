@@ -6,6 +6,7 @@ import type { PublishingRevision } from "@/modules/publishing/api/revisions.clie
 import RevisionDiff from "@/modules/publishing/components/RevisionDiff.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = withDefaults(defineProps<{
   contentID: string;
@@ -77,13 +78,14 @@ async function runRollback(revision: PublishingRevision): Promise<void> {
     >
       <h2>Revision history unavailable</h2>
       <p>{{ error || localError }}</p>
-      <button
+      <UiButton
         v-if="retry"
+        variant="secondary"
         type="button"
         @click="retry()"
       >
         Try again
-      </button>
+      </UiButton>
     </section>
     <p
       v-if="notice"
@@ -132,20 +134,24 @@ async function runRollback(revision: PublishingRevision): Promise<void> {
               </th>
               <td>{{ revision.source_version }}</td>
               <td class="actions">
-                <button
+                <UiButton
+                  variant="secondary"
+                  size="sm"
                   type="button"
                   @click="select(revision)"
                 >
                   Inspect
-                </button>
-                <button
+                </UiButton>
+                <UiButton
+                  variant="secondary"
+                  size="sm"
                   type="button"
                   :aria-label="`Rollback revision ${revision.change_summary || revision.id}`"
                   :disabled="busyID === revision.id || busyRevisionID === revision.id"
                   @click="runRollback(revision)"
                 >
                   {{ busyID === revision.id ? "Rolling back…" : "Rollback" }}
-                </button>
+                </UiButton>
               </td>
             </tr>
           </tbody>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UiButton from "@/shared/components/ui/UiButton.vue";
+
 defineProps<{
   retry: () => void;
   message?: string;
@@ -14,12 +16,12 @@ defineProps<{
       We could not load this page
     </h1>
     <p>{{ message || "Check your connection and try again." }}</p>
-    <button
+    <UiButton
       type="button"
       @click="retry"
     >
       Try again
-    </button>
+    </UiButton>
   </section>
 </template>
 

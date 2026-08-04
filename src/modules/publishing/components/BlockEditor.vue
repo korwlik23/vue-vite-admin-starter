@@ -3,6 +3,9 @@ import { ref } from "vue";
 
 import type { PublishingBlock } from "@/modules/publishing/api/content.client";
 import { validatePublishingBlocks } from "@/modules/publishing/schemas/content.schema";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
+import UiTextarea from "@/shared/components/ui/UiTextarea.vue";
 
 const props = withDefaults(defineProps<{
   modelValue: readonly PublishingBlock[];
@@ -96,19 +99,21 @@ function isRecord(value: unknown): value is Record<string, unknown> {
     >
       <header class="block-card-header">
         <h3>Block {{ index + 1 }}</h3>
-        <button
+        <UiButton
+          variant="danger"
+          size="sm"
           type="button"
           class="quiet-button"
           @click="removeBlock(index)"
         >
           Remove
-        </button>
+        </UiButton>
       </header>
       <label :for="`block-type-${index}`">Block type
-        <select
+        <UiSelect
           :id="`block-type-${index}`"
-          :value="block.type"
-          @change="updateType(index, ($event.target as HTMLSelectElement).value as PublishingBlock['type'])"
+          :model-value="block.type"
+          @update:model-value="updateType(index, $event as PublishingBlock['type'])"
         >
           <option value="text">Text</option>
           <option value="image">Image</option>
@@ -116,15 +121,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
           <option value="answer">Answer</option>
           <option value="steps">Steps</option>
           <option value="comparison">Comparison</option>
-        </select>
+        </UiSelect>
       </label>
       <label :for="`block-data-${index}`">Structured data
-        <textarea
+        <UiTextarea
           :id="`block-data-${index}`"
-          :value="formatData(block)"
-          rows="5"
+          :model-value="formatData(block)"
+          :rows="5"
           spellcheck="false"
-          @change="updateData(index, ($event.target as HTMLTextAreaElement).value)"
+          @update:model-value="updateData(index, $event)"
         />
       </label>
       <p
@@ -137,7 +142,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
     </article>
     <div class="new-block">
       <label for="new-block-type">New block type
-        <select
+        <UiSelect
           id="new-block-type"
           v-model="newType"
         >
@@ -147,22 +152,22 @@ function isRecord(value: unknown): value is Record<string, unknown> {
           <option value="answer">Answer</option>
           <option value="steps">Steps</option>
           <option value="comparison">Comparison</option>
-        </select>
+        </UiSelect>
       </label>
       <label for="new-block-data">New block data
-        <textarea
+        <UiTextarea
           id="new-block-data"
           v-model="newData"
-          rows="4"
+          :rows="4"
           spellcheck="false"
         />
       </label>
-      <button
+      <UiButton
         type="button"
         @click="addBlock"
       >
         Add block
-      </button>
+      </UiButton>
       <p
         v-if="errorFor('new-block.data')"
         class="field-error"

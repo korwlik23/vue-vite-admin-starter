@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 import type { Asset } from "@/modules/media/api/assets.client";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 export interface MediaUploadFile {
   readonly name: string;
@@ -71,13 +72,16 @@ async function handleFile(event: { target: unknown }): Promise<void> {
       :disabled="disabled || pending"
       @change="handleFile"
     >
-    <button
+    <UiButton
+      variant="secondary"
       type="button"
+      :loading="pending"
+      loading-label="Uploading…"
       :disabled="disabled || pending"
       @click="chooseFile"
     >
-      {{ pending ? "Uploading…" : "Choose file" }}
-    </button>
+      Choose file
+    </UiButton>
     <p
       v-if="pending"
       class="progress"

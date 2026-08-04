@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiField from "@/shared/components/ui/UiField.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+
 const props = defineProps<{
   onSubmit: (credentials: {
     email: string;
@@ -65,9 +69,13 @@ function clearErrors(): void {
       {{ errors.form }}
     </div>
 
-    <div class="field">
-      <label for="login-email">Email</label>
-      <input
+    <UiField
+      id="login-email"
+      label="Email"
+      :error="errors.email"
+      required
+    >
+      <UiInput
         id="login-email"
         v-model="email"
         name="email"
@@ -76,19 +84,16 @@ function clearErrors(): void {
         autofocus
         :aria-invalid="Boolean(errors.email)"
         :aria-describedby="errors.email ? 'login-email-error' : undefined"
-      >
-      <p
-        v-if="errors.email"
-        id="login-email-error"
-        class="field-error"
-      >
-        {{ errors.email }}
-      </p>
-    </div>
+      />
+    </UiField>
 
-    <div class="field">
-      <label for="login-password">Password</label>
-      <input
+    <UiField
+      id="login-password"
+      label="Password"
+      :error="errors.password"
+      required
+    >
+      <UiInput
         id="login-password"
         v-model="password"
         name="password"
@@ -96,22 +101,16 @@ function clearErrors(): void {
         autocomplete="current-password"
         :aria-invalid="Boolean(errors.password)"
         :aria-describedby="errors.password ? 'login-password-error' : undefined"
-      >
-      <p
-        v-if="errors.password"
-        id="login-password-error"
-        class="field-error"
-      >
-        {{ errors.password }}
-      </p>
-    </div>
+      />
+    </UiField>
 
-    <button
+    <UiButton
       type="submit"
-      :disabled="pending"
+      :loading="pending"
+      loading-label="Signing in…"
     >
       {{ pending ? "Signing in…" : "Sign in" }}
-    </button>
+    </UiButton>
   </form>
 </template>
 

@@ -4,6 +4,9 @@ import { computed, onMounted, ref } from "vue";
 import { getAdminUser, listAdminUsers, updateAdminUserStatus, type AdminUserDetail, type AdminUserListItem } from "@/modules/identity/api/admin-users.client";
 import type { APIClient } from "@/shared/api/client";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
 
 const props = defineProps<{ client: APIClient }>();
 const users = ref<AdminUserListItem[]>([]);
@@ -74,19 +77,19 @@ async function toggleStatus(): Promise<void> {
       class="filters"
       @submit.prevent="loadUsers"
     >
-      <label>Email prefix<input
+      <label>Email prefix<UiInput
         v-model="query"
         type="search"
         autocomplete="off"
         placeholder="name@example.com"
-      ></label>
-      <label>Status<select v-model="status"><option value="">All statuses</option><option value="active">Active</option><option value="disabled">Disabled</option></select></label>
-      <button
+      /></label>
+      <label>Status<UiSelect v-model="status"><option value="">All statuses</option><option value="active">Active</option><option value="disabled">Disabled</option></UiSelect></label>
+      <UiButton
         type="submit"
         :disabled="loading"
       >
         Search
-      </button>
+      </UiButton>
     </form>
     <div
       v-if="loading"
@@ -133,13 +136,15 @@ async function toggleStatus(): Promise<void> {
                   :data-status="user.status"
                 >{{ user.status }}</span>
               </td><td>{{ user.active_membership_count }}/{{ user.membership_count }}</td><td>
-                <button
+                <UiButton
+                  variant="ghost"
+                  size="sm"
                   type="button"
                   class="link-button"
                   @click="selectUser(user.id)"
                 >
                   View
-                </button>
+                </UiButton>
               </td>
             </tr>
           </tbody>
@@ -168,13 +173,13 @@ async function toggleStatus(): Promise<void> {
                 >{{ selected.user.status }}</span>
               </dd>
             </div><div><dt>Authorization version</dt><dd>{{ selected.user.authorization_version }}</dd></div><div><dt>Memberships</dt><dd>{{ selected.memberships.length }}</dd></div>
-          </dl><button
+          </dl><UiButton
             type="button"
             :disabled="busy"
             @click="toggleStatus"
           >
             {{ selected.user.status === "active" ? "Disable user" : "Enable user" }}
-          </button><h3>Membership summary</h3><ul v-if="selected.memberships.length">
+          </UiButton><h3>Membership summary</h3><ul v-if="selected.memberships.length">
             <li
               v-for="membership in selected.memberships"
               :key="membership.id"

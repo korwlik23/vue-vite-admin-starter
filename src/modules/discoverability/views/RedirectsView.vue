@@ -9,6 +9,10 @@ import type {
 } from "@/modules/discoverability/api/redirects.client";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiCheckbox from "@/shared/components/ui/UiCheckbox.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
 
 interface RedirectDraft {
   source_path: string;
@@ -157,32 +161,36 @@ async function createRedirect(): Promise<void> {
       >
         <h2>Add redirect</h2>
         <div class="fields">
-          <label>Source path<input
+          <label>Source path<UiInput
             v-model.trim="newRedirect.source_path"
             required
             placeholder="/old-path"
-          ></label>
-          <label>Destination path<input
+          /></label>
+          <label>Destination path<UiInput
             v-model.trim="newRedirect.destination_path"
             required
             placeholder="/new-path"
-          ></label>
-          <label>Locale ID<input
+          /></label>
+          <label>Locale ID<UiInput
             v-model.trim="newRedirect.locale_id"
             required
-          ></label>
-          <label>Status<select v-model="newRedirect.status_code"><option :value="301">301</option><option :value="302">302</option><option :value="307">307</option><option :value="308">308</option></select></label>
+          /></label>
+          <label>Status<UiSelect v-model="newRedirect.status_code"><option :value="301">301</option><option :value="302">302</option><option :value="307">307</option><option :value="308">308</option></UiSelect></label>
         </div>
-        <label class="enabled"><input
+        <UiCheckbox
           v-model="newRedirect.enabled"
-          type="checkbox"
-        >Enabled</label>
-        <button
+          class="enabled"
+        >
+          Enabled
+        </UiCheckbox>
+        <UiButton
           type="submit"
+          :loading="busyID === 'new'"
+          loading-label="Creating…"
           :disabled="busyID !== ''"
         >
           Create redirect
-        </button>
+        </UiButton>
       </form>
       <section
         v-if="props.redirects.length === 0"
@@ -200,28 +208,34 @@ async function createRedirect(): Promise<void> {
           class="panel redirect-card"
         >
           <div class="fields">
-            <label>Source path<input v-model.trim="draftFor(redirect).source_path"></label>
-            <label>Destination path<input v-model.trim="draftFor(redirect).destination_path"></label>
-            <label>Locale ID<input v-model.trim="draftFor(redirect).locale_id"></label>
-            <label>Status<select v-model="draftFor(redirect).status_code"><option :value="301">301</option><option :value="302">302</option><option :value="307">307</option><option :value="308">308</option></select></label>
-            <label class="enabled"><input
+            <label>Source path<UiInput v-model.trim="draftFor(redirect).source_path" /></label>
+            <label>Destination path<UiInput v-model.trim="draftFor(redirect).destination_path" /></label>
+            <label>Locale ID<UiInput v-model.trim="draftFor(redirect).locale_id" /></label>
+            <label>Status<UiSelect v-model="draftFor(redirect).status_code"><option :value="301">301</option><option :value="302">302</option><option :value="307">307</option><option :value="308">308</option></UiSelect></label>
+            <UiCheckbox
               v-model="draftFor(redirect).enabled"
-              type="checkbox"
-            >Enabled</label>
+              class="enabled"
+            >
+              Enabled
+            </UiCheckbox>
           </div>
           <p class="helper">
             Version {{ redirect.version }} · {{ redirect.locale_id }}
           </p>
           <footer class="actions">
-            <button
+            <UiButton
+              variant="secondary"
+              size="sm"
               type="button"
               :disabled="busyID !== ''"
               :aria-label="`Save redirect ${redirect.source_path}`"
               @click="saveRedirect(redirect)"
             >
               {{ busyID === redirect.id ? "Saving…" : "Save redirect" }}
-            </button>
-            <button
+            </UiButton>
+            <UiButton
+              variant="danger"
+              size="sm"
               type="button"
               class="danger"
               :disabled="busyID !== ''"
@@ -229,7 +243,7 @@ async function createRedirect(): Promise<void> {
               @click="deleteRedirect(redirect)"
             >
               Delete redirect
-            </button>
+            </UiButton>
           </footer>
         </article>
       </div>

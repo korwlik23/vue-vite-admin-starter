@@ -580,6 +580,75 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/localization/catalog/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export editable translation overrides as JSON. */
+        get: operations["exportTranslationCatalog"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/localization/catalog/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Import editable translation overrides from JSON. */
+        post: operations["importTranslationCatalog"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Change the authenticated user's password and invalidate existing sessions. */
+        patch: operations["changeMyPassword"];
+        trace?: never;
+    };
+    "/me/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read the authenticated user's profile. */
+        get: operations["getMyProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update the authenticated user's profile. */
+        patch: operations["updateMyProfile"];
+        trace?: never;
+    };
     "/media/assets": {
         parameters: {
             query?: never;
@@ -700,6 +769,92 @@ export interface paths {
         put?: never;
         /** Reorder and reparent a complete menu tree atomically. */
         post: operations["reorderNavigationMenu"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List the authenticated user's notifications. */
+        get: operations["listNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/notifications/{notification_id}/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Mark one notification as read. */
+        patch: operations["markNotificationRead"];
+        trace?: never;
+    };
+    "/notifications/read-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark all notifications as read. */
+        post: operations["markAllNotificationsRead"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/operations/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List durable operation jobs. */
+        get: operations["listOperationJobs"];
+        put?: never;
+        /** Enqueue a durable operation job. */
+        post: operations["enqueueOperationJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/operations/jobs/{job_id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Retry a failed operation job. */
+        post: operations["retryOperationJob"];
         delete?: never;
         options?: never;
         head?: never;
@@ -904,6 +1059,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List non-secret global settings. */
+        get: operations["listGlobalSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/settings/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Create or update a non-secret global setting. */
+        put: operations["updateGlobalSetting"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users": {
         parameters: {
             query?: never;
@@ -1079,6 +1268,27 @@ export interface components {
             };
             /** @enum {string} */
             type: "text" | "image" | "callout" | "answer" | "steps" | "comparison";
+        };
+        CatalogExport: {
+            category: string;
+            entries: {
+                [key: string]: string;
+            };
+            locale: string;
+            version: number;
+        };
+        CatalogImportRequest: {
+            category: string;
+            entries: {
+                [key: string]: string;
+            };
+            expected_version: number;
+            locale: string;
+        };
+        CatalogImportResponse: {
+            category: string;
+            locale: string;
+            version: number;
         };
         ContentAudit: {
             /** Format: uuid */
@@ -1265,6 +1475,15 @@ export interface components {
         GEOFields: {
             locality: string;
             region: string;
+        };
+        JobEnqueueRequest: {
+            name: string;
+            payload: {
+                [key: string]: unknown;
+            };
+        };
+        JobListResponse: {
+            items: components["schemas"]["OperationJob"][];
         };
         Locale: {
             code: string;
@@ -1475,6 +1694,42 @@ export interface components {
             enabled: boolean;
             id: string;
             reconcile_revision: number;
+        };
+        MyPasswordChangeRequest: {
+            current_password: string;
+            new_password: string;
+        };
+        Notification: {
+            body: string;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: uuid */
+            id: string;
+            kind: string;
+            /** Format: date-time */
+            read_at?: string | null;
+            title: string;
+            /** Format: uuid */
+            user_id: string;
+        };
+        NotificationListResponse: {
+            items: components["schemas"]["Notification"][];
+        };
+        OperationJob: {
+            attempts: number;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: uuid */
+            id: string;
+            last_error?: string | null;
+            name: string;
+            payload: {
+                [key: string]: unknown;
+            };
+            /** @enum {string} */
+            state: "queued" | "running" | "failed" | "done";
+            /** Format: date-time */
+            updated_at: string;
         };
         PageInfo: {
             page: number;
@@ -1779,6 +2034,18 @@ export interface components {
         SetDefaultLocaleRequest: {
             expected_version: number;
         };
+        Setting: {
+            key: string;
+            value: string;
+            version: number;
+        };
+        SettingListResponse: {
+            items: components["schemas"]["Setting"][];
+        };
+        SettingUpdateRequest: {
+            expected_version: number;
+            value: string;
+        };
         SystemRoleAssignmentRequest: {
             expected_version: number;
             /**
@@ -1830,6 +2097,24 @@ export interface components {
             /** @enum {string} */
             state: "pending" | "finalized" | "failed" | "expired";
             version: number;
+        };
+        UserProfile: {
+            /** Format: date-time */
+            created_at: string;
+            display_name: string;
+            preferred_locale: string;
+            timezone: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** Format: uuid */
+            user_id: string;
+            version: number;
+        };
+        UserProfileUpdateRequest: {
+            display_name: string;
+            expected_version: number;
+            preferred_locale: string;
+            timezone: string;
         };
         WorkflowRequest: {
             /** @enum {string} */
@@ -3141,6 +3426,136 @@ export interface operations {
             409: components["responses"]["Conflict"];
         };
     };
+    exportTranslationCatalog: {
+        parameters: {
+            query: {
+                category: string;
+                locale: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Translation export. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogExport"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    importTranslationCatalog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CatalogImportRequest"];
+            };
+        };
+        responses: {
+            /** @description Imported catalog version. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogImportResponse"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+        };
+    };
+    changeMyPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MyPasswordChangeRequest"];
+            };
+        };
+        responses: {
+            /** @description Password changed and the current session cookie cleared. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            422: components["responses"]["BadRequest"];
+        };
+    };
+    getMyProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Profile. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserProfile"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    updateMyProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserProfileUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Updated profile. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserProfile"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+        };
+    };
     listMediaAssets: {
         parameters: {
             query?: {
@@ -3457,6 +3872,144 @@ export interface operations {
             404: components["responses"]["NotFound"];
             409: components["responses"]["Conflict"];
             422: components["responses"]["BadRequest"];
+        };
+    };
+    listNotifications: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notifications ordered newest first. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    markNotificationRead: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                notification_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notification marked read. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+        };
+    };
+    markAllNotificationsRead: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Notifications marked read. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    listOperationJobs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Durable jobs. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    enqueueOperationJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JobEnqueueRequest"];
+            };
+        };
+        responses: {
+            /** @description Queued job. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OperationJob"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    retryOperationJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Job requeued. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
         };
     };
     listEnabledModules: {
@@ -4001,6 +4554,58 @@ export interface operations {
             404: components["responses"]["NotFound"];
             409: components["responses"]["Conflict"];
             415: components["responses"]["UnsupportedMediaType"];
+        };
+    };
+    listGlobalSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Editable global settings. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingListResponse"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+        };
+    };
+    updateGlobalSetting: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description Saved setting. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Setting"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
         };
     };
     listAdminUsers: {

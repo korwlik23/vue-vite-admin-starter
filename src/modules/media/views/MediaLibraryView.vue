@@ -7,6 +7,7 @@ import MediaDetails from "@/modules/media/components/MediaDetails.vue";
 import MediaUploader, { type MediaUploadFile } from "@/modules/media/components/MediaUploader.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = withDefaults(defineProps<{
   assets?: readonly Asset[];
@@ -81,13 +82,14 @@ async function removeAsset(asset: Asset): Promise<void> {
       >
         <h2>Media library unavailable</h2>
         <p>{{ error || localError }}</p>
-        <button
+        <UiButton
           v-if="retry"
+          variant="secondary"
           type="button"
           @click="retry()"
         >
           Try again
-        </button>
+        </UiButton>
       </section>
       <p
         v-if="notice"

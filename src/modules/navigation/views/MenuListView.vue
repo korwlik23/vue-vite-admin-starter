@@ -2,6 +2,7 @@
 /* eslint-disable vue/require-default-prop */
 import type { Menu } from "@/modules/navigation/api/menus.client";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = withDefaults(defineProps<{
   menus?: readonly Menu[];
@@ -43,13 +44,14 @@ const emit = defineEmits<{ select: [value: Menu] }>();
       class="panel state error-panel"
       role="alert"
     >
-      <h2>Menus unavailable</h2><p>{{ error }}</p><button
+      <h2>Menus unavailable</h2><p>{{ error }}</p><UiButton
         v-if="retry"
+        variant="secondary"
         type="button"
         @click="retry()"
       >
         Try again
-      </button>
+      </UiButton>
     </section>
     <section
       v-else-if="props.menus.length === 0"
@@ -71,12 +73,13 @@ const emit = defineEmits<{ select: [value: Menu] }>();
             {{ menu.key }} · {{ menu.locale_id }}
           </p><h2>{{ menu.name }}</h2><p>Version {{ menu.version }} · {{ menu.items.length }} top-level items</p>
         </div>
-        <button
+        <UiButton
+          variant="secondary"
           type="button"
           @click="emit('select', menu)"
         >
           Edit menu
-        </button>
+        </UiButton>
       </article>
     </div>
   </section>

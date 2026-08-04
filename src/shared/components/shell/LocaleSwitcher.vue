@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
+
 defineProps<{
   modelValue: string;
   locales: readonly { code: string; name: string }[];
@@ -16,13 +18,9 @@ function update(value: string): void {
 <template>
   <label class="locale-switcher">
     <span>Language</span>
-    <select
-      :value="modelValue"
-      @change="
-        update(
-          String(($event.target as unknown as { value: string }).value),
-        )
-      "
+    <UiSelect
+      :model-value="modelValue"
+      @update:model-value="update(String($event))"
     >
       <option
         v-for="locale in locales"
@@ -31,7 +29,7 @@ function update(value: string): void {
       >
         {{ locale.name }}
       </option>
-    </select>
+    </UiSelect>
   </label>
 </template>
 

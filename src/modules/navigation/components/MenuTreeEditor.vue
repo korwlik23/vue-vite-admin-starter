@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import type { MenuItemInput } from "@/modules/navigation/api/menus.client";
+import UiCheckbox from "@/shared/components/ui/UiCheckbox.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
 
 defineOptions({ name: "MenuTreeEditor" });
 
@@ -29,32 +32,34 @@ function updateChildren(index: number, children: MenuItemInput[]): void {
       class="menu-item"
     >
       <div class="item-fields">
-        <label :for="`menu-label-${item.id || index}`">Label <strong>{{ item.label }}</strong><input
+        <label :for="`menu-label-${item.id || index}`">Label <strong>{{ item.label }}</strong><UiInput
           :id="`menu-label-${item.id || index}`"
-          :value="item.label"
+          :model-value="item.label"
           :disabled="disabled"
           :aria-label="`Label ${item.label}`"
-          @input="update(index, { label: ($event.target as HTMLInputElement).value })"
-        ></label>
-        <label :for="`menu-target-${item.id || index}`">Target<input
+          @update:model-value="update(index, { label: $event })"
+        /></label>
+        <label :for="`menu-target-${item.id || index}`">Target<UiInput
           :id="`menu-target-${item.id || index}`"
-          :value="item.target"
+          :model-value="item.target"
           :disabled="disabled"
           :aria-label="`Target ${item.label}`"
-          @input="update(index, { target: ($event.target as HTMLInputElement).value })"
-        ></label>
-        <label :for="`menu-kind-${item.id || index}`">Target type<select
+          @update:model-value="update(index, { target: $event })"
+        /></label>
+        <label :for="`menu-kind-${item.id || index}`">Target type<UiSelect
           :id="`menu-kind-${item.id || index}`"
-          :value="item.target_kind"
+          :model-value="item.target_kind"
           :disabled="disabled"
-          @change="update(index, { target_kind: ($event.target as HTMLSelectElement).value as MenuItemInput['target_kind'] })"
-        ><option value="internal_path">Internal path</option><option value="external_url">External URL</option><option value="content_key">Content key</option></select></label>
-        <label class="enabled"><input
-          type="checkbox"
-          :checked="item.enabled"
+          @update:model-value="update(index, { target_kind: $event as MenuItemInput['target_kind'] })"
+        ><option value="internal_path">Internal path</option><option value="external_url">External URL</option><option value="content_key">Content key</option></UiSelect></label>
+        <UiCheckbox
+          class="enabled"
+          :model-value="item.enabled"
           :disabled="disabled"
-          @change="update(index, { enabled: ($event.target as HTMLInputElement).checked })"
-        >Enabled</label>
+          @update:model-value="update(index, { enabled: $event })"
+        >
+          Enabled
+        </UiCheckbox>
       </div>
       <MenuTreeEditor
         v-if="item.children && item.children.length > 0"

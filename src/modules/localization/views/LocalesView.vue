@@ -4,6 +4,9 @@ import { onMounted, ref } from "vue";
 import { createLocale, listLocales, setDefaultLocale, updateLocaleStatus, type Locale } from "@/modules/localization/api/locales.client";
 import type { APIClient } from "@/shared/api/client";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
 
 const props = defineProps<{ client: APIClient }>();
 const locales = ref<Locale[]>([]);
@@ -44,17 +47,17 @@ async function makeDefault(locale: Locale): Promise<void> { if (!globalThis.conf
       class="create-form"
       @submit.prevent="addLocale"
     >
-      <label>Code<input
+      <label>Code<UiInput
         v-model="code"
         required
         placeholder="th-TH"
-      ></label><label>Name<input
+      /></label><label>Name<UiInput
         v-model="name"
         required
         placeholder="Thai"
-      ></label><label>Direction<select v-model="direction"><option value="ltr">LTR</option><option value="rtl">RTL</option></select></label><button type="submit">
+      /></label><label>Direction<UiSelect v-model="direction"><option value="ltr">LTR</option><option value="rtl">RTL</option></UiSelect></label><UiButton type="submit">
         Add locale
-      </button>
+      </UiButton>
     </form><div
       v-if="loading"
       class="panel state"
@@ -95,20 +98,24 @@ async function makeDefault(locale: Locale): Promise<void> { if (!globalThis.conf
             :key="locale.id"
           >
             <td>{{ locale.code }}</td><td>{{ locale.name }}</td><td>{{ locale.enabled ? "Yes" : "No" }}</td><td>{{ locale.selectable ? "Yes" : "No" }}</td><td>{{ locale.default ? "Yes" : "No" }}</td><td>
-              <button
+              <UiButton
+                size="sm"
+                variant="secondary"
                 type="button"
                 :disabled="busyID === locale.id"
                 @click="toggle(locale)"
               >
                 {{ locale.enabled ? "Disable" : "Enable" }}
-              </button><button
+              </UiButton><UiButton
                 v-if="!locale.default"
+                size="sm"
+                variant="secondary"
                 type="button"
                 :disabled="busyID === locale.id || !locale.enabled"
                 @click="makeDefault(locale)"
               >
                 Set default
-              </button>
+              </UiButton>
             </td>
           </tr>
         </tbody>

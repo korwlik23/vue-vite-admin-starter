@@ -11,9 +11,14 @@ import type {
 import FoundationStatusView from "@/modules/operations/views/FoundationStatusView.vue";
 import RoleAdministrationView from "@/modules/authorization/views/RoleAdministrationView.vue";
 import UsersView from "@/modules/identity/views/UsersView.vue";
+import ProfileView from "@/modules/identity/views/ProfileView.vue";
 import MembershipsView from "@/modules/accounts/views/MembershipsView.vue";
 import AuditEventsView from "@/modules/audit/views/AuditEventsView.vue";
 import ModulesView from "@/modules/operations/views/ModulesView.vue";
+import UIComponentsView from "@/modules/operations/views/UIComponentsView.vue";
+import JobsView from "@/modules/operations/views/JobsView.vue";
+import NotificationsView from "@/modules/notifications/views/NotificationsView.vue";
+import SettingsView from "@/modules/settings/views/SettingsView.vue";
 import LocalesView from "@/modules/localization/views/LocalesView.vue";
 import CatalogEditorView from "@/modules/localization/views/CatalogEditorView.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
@@ -38,7 +43,8 @@ export interface CoreRouteDependencies {
     verified?: () => Promise<unknown> | unknown;
   };
   foundation: {
-    state: "loading" | "error" | "success" | (() => "loading" | "error" | "success");
+    state:
+      "loading" | "error" | "success" | (() => "loading" | "error" | "success");
     account?: { name: string; slug: string } | undefined;
     selectedLocale?: string;
     enabledModules?: string[] | (() => string[]);
@@ -103,6 +109,28 @@ export function createCoreRoutes(
       },
     });
     children.push({
+      path: "profile",
+      name: "identity-profile",
+      component: ProfileView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "identity",
+        requiredPermission: "identity.profile.read.own",
+      },
+    });
+    children.push({
+      path: "notifications",
+      name: "notifications",
+      component: NotificationsView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "notifications",
+        requiredPermission: "notifications.inbox.read.own",
+      },
+    });
+    children.push({
       path: "accounts/memberships",
       name: "account-memberships",
       component: MembershipsView,
@@ -139,6 +167,27 @@ export function createCoreRoutes(
       },
     });
     children.push({
+      path: "operations/jobs",
+      name: "operations-jobs",
+      component: JobsView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "operations",
+        requiredPermission: "operations.jobs.read.system",
+      },
+    });
+    children.push({
+      path: "ui-components",
+      name: "ui-components",
+      component: UIComponentsView,
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "operations",
+        requiredPermission: "operations.foundation.read.system",
+      },
+    });
+    children.push({
       path: "localization/locales",
       name: "localization-locales",
       component: LocalesView,
@@ -158,6 +207,17 @@ export function createCoreRoutes(
         requiresAuthentication: true,
         requiredModule: "localization",
         requiredPermission: "localization.translations.update.system",
+      },
+    });
+    children.push({
+      path: "settings",
+      name: "settings",
+      component: SettingsView,
+      props: () => ({ client: dependencies.authorization?.client }),
+      meta: {
+        requiresAuthentication: true,
+        requiredModule: "settings",
+        requiredPermission: "settings.global.read.system",
       },
     });
   }

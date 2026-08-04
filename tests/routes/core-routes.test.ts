@@ -71,4 +71,23 @@ describe("U14A", () => {
       requiredModule: "localization", requiredPermission: "localization.translations.update.system",
     });
   });
+
+  it("registers the protected UI component showcase route", () => {
+    const client = { request: vi.fn() } as unknown as APIClient;
+    const routes = createCoreRoutes({
+      login: { authenticated: false, submit: vi.fn() },
+      mfa: { pending: false, methods: [], refreshCSRF: vi.fn(), submit: vi.fn() },
+      foundation: { state: "loading", retry: vi.fn() },
+      authorization: { client },
+    });
+    const router = createRouter({ history: createMemoryHistory(), routes });
+    const resolved = router.resolve("/ui-components");
+
+    expect(resolved.name).toBe("ui-components");
+    expect(resolved.meta).toMatchObject({
+      requiresAuthentication: true,
+      requiredModule: "operations",
+      requiredPermission: "operations.foundation.read.system",
+    });
+  });
 });

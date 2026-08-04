@@ -8,6 +8,8 @@ import ContentIdentityFields, { type ContentIdentityState } from "@/modules/publ
 import type { PublishingBlock } from "@/modules/publishing/api/content.client";
 import type { ContentMutation } from "@/modules/publishing/schemas/content.schema";
 import { parseContentMutation, type ValidationErrors } from "@/modules/publishing/schemas/content.schema";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
 
 type FormState = ContentIdentityState & {
   blocks: PublishingBlock[];
@@ -137,19 +139,22 @@ function errorFor(field: string): string | undefined {
       @update:geo="state.geo = $event; markDirty()"
       @update:aeo="state.aeo = $event; markDirty()"
     />
-    <label v-if="mode === 'edit'">Expected version<input
-      v-model.number="state.expected_version"
+    <label v-if="mode === 'edit'">Expected version<UiInput
+      :model-value="state.expected_version ?? ''"
       name="expected_version"
       type="number"
       min="1"
       required
-    ><small v-if="errorFor('expected_version')">{{ errorFor("expected_version") }}</small></label>
-    <button
+      @update:model-value="state.expected_version = Number($event); markDirty()"
+    /><small v-if="errorFor('expected_version')">{{ errorFor("expected_version") }}</small></label>
+    <UiButton
       type="submit"
+      :loading="disabled"
+      loading-label="Saving…"
       :disabled="disabled"
     >
-      {{ disabled ? "Saving…" : "Save content" }}
-    </button>
+      Save content
+    </UiButton>
   </form>
 </template>
 

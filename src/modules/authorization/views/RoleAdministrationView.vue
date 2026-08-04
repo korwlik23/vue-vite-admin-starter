@@ -17,6 +17,7 @@ import {
 } from "@/modules/authorization/api/roles.client";
 import type { APIClient } from "@/shared/api/client";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
 
 const props = defineProps<{
   client: APIClient;
@@ -265,12 +266,12 @@ function resolveAccountID(value: string | (() => string | undefined) | undefined
       class="panel empty-panel"
     >
       <h2>Roles unavailable</h2>
-      <button
+      <UiButton
         type="button"
         @click="loadRoles"
       >
         Try again
-      </button>
+      </UiButton>
     </div>
     <div
       v-else

@@ -7,6 +7,10 @@ import type { SEODefaults, SEOUpdateRequest } from "@/modules/discoverability/ap
 import ContentAuditPanel from "@/modules/discoverability/components/ContentAuditPanel.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import { safeError } from "@/shared/api/errors";
+import UiButton from "@/shared/components/ui/UiButton.vue";
+import UiInput from "@/shared/components/ui/UiInput.vue";
+import UiSelect from "@/shared/components/ui/UiSelect.vue";
+import UiTextarea from "@/shared/components/ui/UiTextarea.vue";
 
 const props = withDefaults(defineProps<{
   audits?: readonly ContentAudit[];
@@ -144,33 +148,35 @@ async function submitAudit(): Promise<void> {
           </p><h2>Locale metadata</h2>
         </div>
         <div class="fields">
-          <label>Locale ID<input
+          <label>Locale ID<UiInput
             v-model.trim="seoDraft.locale_id"
             required
-          ></label>
-          <label>Title<input
+          /></label>
+          <label>Title<UiInput
             v-model.trim="seoDraft.title"
             required
             maxlength="160"
-          ></label>
-          <label class="wide">Description<textarea
+          /></label>
+          <label class="wide">Description<UiTextarea
             v-model.trim="seoDraft.description"
             required
             maxlength="320"
           /></label>
-          <label>Canonical base<input
+          <label>Canonical base<UiInput
             v-model.trim="seoDraft.canonical_base"
             required
             type="url"
-          ></label>
-          <label>Robots<select v-model="seoDraft.robots"><option value="index,follow">index,follow</option><option value="noindex,follow">noindex,follow</option><option value="index,nofollow">index,nofollow</option><option value="noindex,nofollow">noindex,nofollow</option></select></label>
+          /></label>
+          <label>Robots<UiSelect v-model="seoDraft.robots"><option value="index,follow">index,follow</option><option value="noindex,follow">noindex,follow</option><option value="index,nofollow">index,nofollow</option><option value="noindex,nofollow">noindex,nofollow</option></UiSelect></label>
         </div>
-        <button
+        <UiButton
+          :loading="busy === 'seo'"
+          loading-label="Saving…"
           type="submit"
           :disabled="busy !== ''"
         >
-          {{ busy === "seo" ? "Saving…" : "Save SEO defaults" }}
-        </button>
+          Save SEO defaults
+        </UiButton>
       </form>
       <section class="panel audit-runner">
         <div>
@@ -181,23 +187,25 @@ async function submitAudit(): Promise<void> {
           </p>
         </div>
         <div class="fields">
-          <label>Content ID<input
+          <label>Content ID<UiInput
             v-model.trim="auditInput.content_id"
             required
-          ></label>
-          <label>Locale ID<input
+          /></label>
+          <label>Locale ID<UiInput
             v-model.trim="auditInput.locale_id"
             required
-          ></label>
+          /></label>
         </div>
-        <button
+        <UiButton
+          :loading="busy === 'audit'"
+          loading-label="Running…"
           type="button"
           :disabled="busy !== '' || !auditInput.content_id || !auditInput.locale_id"
           aria-label="Run content audit"
           @click="submitAudit"
         >
-          {{ busy === "audit" ? "Running…" : "Run content audit" }}
-        </button>
+          Run content audit
+        </UiButton>
       </section>
       <section
         class="audit-list"
