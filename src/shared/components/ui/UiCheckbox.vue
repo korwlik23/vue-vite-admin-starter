@@ -39,16 +39,16 @@ const emit = defineEmits<{ "update:modelValue": [value: boolean] }>();
 .ui-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: var(--space-2);
   color: inherit;
   font: inherit;
   cursor: pointer;
 }
 .ui-checkbox input {
-  width: 1rem;
-  height: 1rem;
+  width: var(--space-4);
+  height: var(--space-4);
   margin: 0;
-  accent-color: #1d4ed8;
+  accent-color: var(--color-action);
 }
 .ui-checkbox input:disabled { cursor: not-allowed; }
 .ui-checkbox:has(input:disabled) { cursor: not-allowed; opacity: 0.6; }

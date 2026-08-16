@@ -31,15 +31,15 @@ function selectedValue(event: globalThis.Event): string | number {
 <style scoped>
 .ui-select {
   width: 100%;
-  min-height: 2.75rem;
-  border: 1px solid #cfd6e2;
-  border-radius: 0.7rem;
-  padding: 0.65rem 0.8rem;
-  color: #172033;
-  background: #fff;
+  min-height: var(--control-height-md);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  background: var(--color-surface);
   font: inherit;
 }
-.ui-select:focus { border-color: #2563eb; outline: 3px solid rgb(37 99 235 / 18%); }
-.ui-select:disabled { cursor: not-allowed; opacity: 0.6; background: #f2f4f7; }
-.ui-select--invalid { border-color: #b42318; }
+.ui-select:focus-visible { border-color: var(--color-focus); outline: none; box-shadow: var(--focus-ring); }
+.ui-select:disabled { cursor: not-allowed; opacity: 0.6; background: var(--color-surface-subtle); }
+.ui-select--invalid { border-color: var(--color-danger); }
 </style>

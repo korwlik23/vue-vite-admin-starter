@@ -10,10 +10,15 @@ export function buildAdminNavigationItems(
   moduleIDs: readonly string[],
   permissions: readonly string[],
 ): readonly AdminNavigationItem[] {
-  const items: AdminNavigationItem[] = [
-    { id: "foundation", label: "Foundation", href: "/" },
-  ];
+  const items: AdminNavigationItem[] = [];
   const candidates = [
+    {
+      id: "foundation",
+      label: "Foundation",
+      href: "/",
+      module: "operations",
+      permission: "operations.foundation.read.system",
+    },
     {
       id: "roles",
       label: "Roles",

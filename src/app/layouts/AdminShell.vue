@@ -50,12 +50,13 @@ const navigationOpen = ref(false);
 <style scoped>
 .skip-link {
   position: fixed;
-  top: 0.75rem;
-  left: 0.75rem;
+  top: var(--space-3);
+  inset-inline-start: var(--space-3);
   z-index: 100;
-  padding: 0.75rem 1rem;
-  color: white;
-  background: #0f172a;
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-inverse);
+  background: var(--color-action);
+  border-radius: var(--radius-md);
   transform: translateY(-180%);
 }
 
@@ -74,9 +75,9 @@ const navigationOpen = ref(false);
 
 .admin-navigation {
   display: none;
-  padding: 1rem;
-  border-right: 1px solid #d5dbe5;
-  background: rgb(255 255 255 / 72%);
+  padding: var(--space-4);
+  border-inline-end: 1px solid var(--color-border);
+  background: var(--color-surface-overlay);
 }
 
 .admin-navigation[data-open="true"] {
@@ -85,12 +86,12 @@ const navigationOpen = ref(false);
 
 main {
   min-width: 0;
-  padding: clamp(1rem, 4vw, 3rem);
+  padding: clamp(var(--space-4), 4vw, var(--space-12));
 }
 
 @media (min-width: 64rem) {
   .admin-body {
-    grid-template-columns: 16rem minmax(0, 1fr);
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
   }
 
   .admin-navigation {
@@ -98,10 +99,4 @@ main {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .admin-navigation {
-    border-color: #293449;
-    background: rgb(15 23 42 / 72%);
-  }
-}
 </style>

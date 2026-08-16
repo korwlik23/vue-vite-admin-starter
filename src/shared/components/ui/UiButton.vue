@@ -51,32 +51,37 @@ const isDisabled = computed(() => props.disabled || props.loading);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   min-height: 2.75rem;
   border: 1px solid transparent;
-  border-radius: 0.75rem;
-  padding-inline: 1rem;
+  border-radius: var(--radius-md);
+  padding-inline: var(--space-4);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-  transition: filter 150ms ease, background 150ms ease, border-color 150ms ease;
+  transition:
+    filter var(--motion-fast) var(--ease-standard),
+    background var(--motion-fast) var(--ease-standard),
+    border-color var(--motion-fast) var(--ease-standard);
 }
 
 .ui-button:hover:not(:disabled) { filter: brightness(0.96); }
-.ui-button:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
+.ui-button:focus-visible { outline-color: var(--color-focus); outline-offset: 2px; }
 .ui-button:disabled { cursor: not-allowed; opacity: 0.55; }
-.ui-button--sm { min-height: 2.25rem; padding-inline: 0.75rem; font-size: 0.85rem; }
-.ui-button--lg { min-height: 3.25rem; padding-inline: 1.25rem; }
-.ui-button--primary { color: #fff; background: #1d4ed8; }
-.ui-button--secondary { color: #172033; border-color: #cfd6e2; background: #fff; }
-.ui-button--ghost { color: #1d4ed8; background: transparent; }
-.ui-button--danger { color: #fff; background: #b42318; }
+.ui-button--sm { min-height: var(--control-height-sm); padding-inline: var(--space-3); font-size: var(--text-sm); }
+.ui-button--lg { min-height: var(--control-height-lg); padding-inline: var(--space-5); }
+.ui-button--primary { color: var(--color-text-inverse); background: var(--color-action); }
+.ui-button--primary:hover:not(:disabled) { background: var(--color-action-hover); }
+.ui-button--secondary { color: var(--color-text); border-color: var(--color-border); background: var(--color-surface); }
+.ui-button--ghost { color: var(--color-action); background: transparent; }
+.ui-button--danger { color: var(--color-text-inverse); background: var(--color-danger); }
+.ui-button--danger:hover:not(:disabled) { background: var(--color-danger-hover); }
 .ui-button__spinner {
   width: 0.9rem;
   height: 0.9rem;
   border: 2px solid currentColor;
   border-right-color: transparent;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   animation: ui-spin 700ms linear infinite;
 }
 

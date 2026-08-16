@@ -3,16 +3,8 @@ import { ref } from "vue";
 
 import LoadingState from "@/shared/components/feedback/LoadingState.vue";
 import {
-  UiBadge,
-  UiButton,
-  UiCard,
-  UiCheckbox,
-  UiEmptyState,
-  UiField,
-  UiInput,
-  UiRadio,
-  UiSelect,
-  UiTextarea,
+  UiBadge, UiButton, UiCard, UiCheckbox, UiEmptyState, UiField, UiInput,
+  UiPage, UiPageHeader, UiRadio, UiSelect, UiTextarea,
 } from "@/shared/components/ui";
 
 const title = ref("Example page title");
@@ -23,20 +15,11 @@ const density = ref("comfortable");
 </script>
 
 <template>
-  <main
-    class="ui-components-page"
-    aria-labelledby="ui-components-title"
-  >
-    <header class="page-header">
-      <p class="eyebrow">
-        DESIGN SYSTEM
-      </p>
-      <h1 id="ui-components-title">
-        UI Components
-      </h1>
-      <p>Reusable Admin primitives and their supported states.</p>
-    </header>
-
+  <UiPage aria-labelledby="ui-components-title">
+    <UiPageHeader
+      title="UI Components"
+      description="Reusable Admin primitives and their supported states."
+    />
     <section
       class="showcase-grid"
       aria-label="UI component examples"
@@ -94,7 +77,7 @@ const density = ref("comfortable");
 
       <UiCard
         title="Selection controls"
-        description="Checkboxes and radios preserve native keyboard and form semantics."
+        description="Native keyboard and form semantics are preserved."
       >
         <div class="selection-stack">
           <UiCheckbox v-model="enabled">
@@ -170,7 +153,6 @@ const density = ref("comfortable");
       <UiCard title="Loading state">
         <LoadingState label="Loading component preview" />
       </UiCard>
-
       <UiCard title="Empty state">
         <UiEmptyState
           title="No records yet"
@@ -184,19 +166,18 @@ const density = ref("comfortable");
         </UiEmptyState>
       </UiCard>
     </section>
-  </main>
+  </UiPage>
 </template>
 
 <style scoped>
-.ui-components-page { display: grid; gap: 1.5rem; }
-.page-header h1 { margin: 0.6rem 0; color: #101828; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: -0.045em; }
-.page-header p:last-child { margin: 0; color: #667085; }
-.eyebrow { margin: 0; color: #526078; font-size: 0.7rem; font-weight: 750; letter-spacing: 0.14em; }
-.showcase-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.showcase-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .showcase-grid > :nth-child(3) { grid-column: 1 / -1; }
-.example-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.65rem; }
-.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.example-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.selection-stack { display: grid; gap: var(--space-3); }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4); }
 .form-grid > :last-child { grid-column: 1 / -1; }
-.selection-stack { display: grid; gap: 0.8rem; }
-@media (max-width: 48rem) { .showcase-grid { grid-template-columns: 1fr; } .showcase-grid > :nth-child(3) { grid-column: auto; } .form-grid { grid-template-columns: 1fr; } .form-grid > :last-child { grid-column: auto; } }
+@media (max-width: 48rem) {
+  .showcase-grid, .form-grid { grid-template-columns: minmax(0, 1fr); }
+  .showcase-grid > :nth-child(3), .form-grid > :last-child { grid-column: auto; }
+}
 </style>

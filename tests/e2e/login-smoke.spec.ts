@@ -20,7 +20,7 @@ test("shows client-side validation for an empty login submission", async ({ page
   await page.goto("/login", { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Sign in" }).click();
 
-  await expect(page.getByRole("alert")).toHaveText(
+  await expect(page.getByRole("alert").filter({ hasText: "Please review" })).toHaveText(
     "Please review the highlighted fields.",
   );
   await expect(page.locator("#login-email-error")).toHaveText("Email is required.");

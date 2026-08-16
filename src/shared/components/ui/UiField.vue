@@ -41,9 +41,9 @@ withDefaults(
 </template>
 
 <style scoped>
-.ui-field { display: grid; gap: 0.45rem; }
-.ui-field label { color: #344054; font-size: 0.87rem; font-weight: 700; }
-.ui-field__hint, .ui-field__error { margin: 0; font-size: 0.82rem; line-height: 1.4; }
-.ui-field__hint { color: #667085; }
-.ui-field__error { color: #b42318; }
+.ui-field { display: grid; gap: var(--space-2); }
+.ui-field label { color: var(--color-text); font-size: var(--text-sm); font-weight: 700; }
+.ui-field__hint, .ui-field__error { margin: 0; font-size: var(--text-xs); line-height: var(--line-normal); }
+.ui-field__hint { color: var(--color-text-muted); }
+.ui-field__error { color: var(--color-danger); }
 </style>

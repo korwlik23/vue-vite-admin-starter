@@ -19,19 +19,20 @@ withDefaults(defineProps<{ label?: string }>(), { label: "Loading" });
 <style scoped>
 .feedback-state {
   display: grid;
-  min-height: 12rem;
+  min-height: calc(var(--space-16) * 3);
   place-items: center;
   align-content: center;
-  gap: 0.8rem;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
 }
 
 .spinner {
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 2px solid #cbd5e1;
-  border-top-color: #2563eb;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  width: var(--space-6);
+  height: var(--space-6);
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-action);
+  border-radius: var(--radius-pill);
+  animation: spin var(--motion-standard) linear infinite;
 }
 
 @keyframes spin {

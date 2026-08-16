@@ -35,12 +35,12 @@ const emit = defineEmits<{ "update:modelValue": [value: string] }>();
 .ui-radio {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: var(--space-2);
   color: inherit;
   font: inherit;
   cursor: pointer;
 }
-.ui-radio input { accent-color: #1d4ed8; }
+.ui-radio input { accent-color: var(--color-action); }
 .ui-radio input:disabled { cursor: not-allowed; }
 .ui-radio:has(input:disabled) { cursor: not-allowed; opacity: 0.6; }
 </style>

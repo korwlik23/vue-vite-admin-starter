@@ -35,11 +35,10 @@ withDefaults(defineProps<{ title?: string; description?: string }>(), {
 </template>
 
 <style scoped>
-.ui-card { border: 1px solid #d5dbe5; border-radius: 1rem; background: rgb(255 255 255 / 88%); box-shadow: 0 0.75rem 2rem rgb(16 24 40 / 6%); }
-.ui-card__header { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem 0; }
-.ui-card__header h2 { margin: 0; color: #101828; font-size: 1.05rem; }
-.ui-card__header p { margin: 0.35rem 0 0; color: #667085; font-size: 0.9rem; }
-.ui-card__body { padding: 1.1rem; }
-.ui-card__footer { display: flex; justify-content: flex-end; gap: 0.6rem; padding: 0 1.1rem 1.1rem; }
-@media (prefers-color-scheme: dark) { .ui-card { border-color: #293449; background: rgb(15 23 42 / 88%); } .ui-card__header h2 { color: #f8fafc; } .ui-card__header p { color: #aab5c7; } }
+.ui-card { border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-overlay); box-shadow: var(--shadow-surface); }
+.ui-card__header { display: flex; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-5) 0; }
+.ui-card__header h2 { margin: 0; color: var(--color-text); font-size: var(--text-lg); }
+.ui-card__header p { margin: var(--space-1) 0 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+.ui-card__body { padding: var(--space-5); }
+.ui-card__footer { display: flex; justify-content: flex-end; gap: var(--space-2); padding: 0 var(--space-5) var(--space-5); }
 </style>

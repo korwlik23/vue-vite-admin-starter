@@ -21,17 +21,17 @@ const emit = defineEmits<{ "update:modelValue": [value: string] }>();
 <style scoped>
 .ui-textarea {
   width: 100%;
-  min-height: 7rem;
+  min-height: calc(var(--control-height-md) * 2.5);
   resize: vertical;
-  border: 1px solid #cfd6e2;
-  border-radius: 0.7rem;
-  padding: 0.7rem 0.8rem;
-  color: #172033;
-  background: #fff;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  color: var(--color-text);
+  background: var(--color-surface);
   font: inherit;
-  line-height: 1.5;
+  line-height: var(--line-normal);
 }
-.ui-textarea:focus { border-color: #2563eb; outline: 3px solid rgb(37 99 235 / 18%); }
-.ui-textarea:disabled { cursor: not-allowed; opacity: 0.6; background: #f2f4f7; }
-.ui-textarea--invalid { border-color: #b42318; }
+.ui-textarea:focus-visible { border-color: var(--color-focus); outline: none; box-shadow: var(--focus-ring); }
+.ui-textarea:disabled { cursor: not-allowed; opacity: 0.6; background: var(--color-surface-subtle); }
+.ui-textarea--invalid { border-color: var(--color-danger); }
 </style>

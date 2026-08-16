@@ -41,23 +41,24 @@ defineEmits<{
 .admin-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  min-height: 4.5rem;
-  padding: 0.8rem clamp(1rem, 3vw, 2rem);
-  border-bottom: 1px solid #d5dbe5;
-  background: rgb(255 255 255 / 90%);
+  gap: var(--space-4);
+  min-height: var(--space-16);
+  padding: var(--space-3) clamp(var(--space-4), 3vw, var(--space-8));
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-overlay);
 }
 
 .navigation-toggle {
-  min-height: 2.75rem;
-  padding-inline: 0.9rem;
-  border: 1px solid #c8d0dc;
-  border-radius: 0.65rem;
+  min-height: var(--control-height-md);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
   background: transparent;
 }
 
 .account-name {
-  margin: 0.15rem 0 0;
+  margin: var(--space-1) 0 0;
+  color: var(--color-text);
   font-weight: 750;
 }
 

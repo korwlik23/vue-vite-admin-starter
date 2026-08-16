@@ -90,4 +90,20 @@ describe("U14A", () => {
       requiredPermission: "operations.foundation.read.system",
     });
   });
+
+  it("passes live navigation to the parent shell instead of a child view", () => {
+    const navigation = vi.fn(() => [{ id: "foundation", label: "Foundation", href: "/" }]);
+    const routes = createCoreRoutes({
+      login: { authenticated: false, submit: vi.fn() },
+      mfa: { pending: false, methods: [], refreshCSRF: vi.fn(), submit: vi.fn() },
+      foundation: { state: "loading", retry: vi.fn() },
+      navigation,
+    });
+    const shell = routes.find((route) => route.path === "/");
+    const foundation = shell?.children?.find((route) => route.name === "foundation");
+
+    expect(typeof shell?.props).toBe("function");
+    expect((shell?.props as () => unknown)()).toEqual({ navigationItems: navigation() });
+    expect((foundation?.props as () => Record<string, unknown>)()).not.toHaveProperty("navigationItems");
+  });
 });

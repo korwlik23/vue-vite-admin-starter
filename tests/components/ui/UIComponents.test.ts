@@ -76,6 +76,8 @@ describe("UI component system", () => {
     const wrapper = mount(UIComponentsView);
 
     expect(wrapper.get("h1").text()).toBe("UI Components");
+    expect(wrapper.get(".ui-page").element.tagName).toBe("SECTION");
+    expect(wrapper.find("main").exists()).toBe(false);
     expect(wrapper.text()).toContain("Buttons");
     expect(wrapper.text()).toContain("Form controls");
     expect(wrapper.text()).toContain("Selection controls");

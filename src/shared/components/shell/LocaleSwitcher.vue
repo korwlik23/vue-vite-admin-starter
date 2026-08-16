@@ -36,19 +36,11 @@ function update(value: string): void {
 <style scoped>
 .locale-switcher {
   display: grid;
-  gap: 0.2rem;
+  gap: var(--space-1);
   margin-left: auto;
-  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
   font-weight: 700;
 }
 
-select {
-  min-height: 2.75rem;
-  padding-inline: 0.7rem;
-  border: 1px solid #c8d0dc;
-  border-radius: 0.65rem;
-  color: inherit;
-  background: transparent;
-  font: inherit;
-}
 </style>

@@ -68,7 +68,6 @@ export function createCoreRoutes(
       component: FoundationStatusView,
       props: () => ({
         ...dependencies.foundation,
-        navigationItems: dependencies.navigation?.(),
         state: resolveValue(dependencies.foundation.state),
         enabledModules:
           typeof dependencies.foundation.enabledModules === "function"
@@ -253,6 +252,7 @@ export function createCoreRoutes(
     {
       path: "/",
       component: AdminRouteShell,
+      props: () => ({ navigationItems: dependencies.navigation?.() ?? [] }),
       children,
     },
     {

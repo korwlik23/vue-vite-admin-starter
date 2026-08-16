@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import ErrorState from "@/shared/components/feedback/ErrorState.vue";
 import ForbiddenState from "@/shared/components/feedback/ForbiddenState.vue";
 import LoadingState from "@/shared/components/feedback/LoadingState.vue";
+import NotFoundState from "@/shared/components/feedback/NotFoundState.vue";
 
 describe("U13C", () => {
   it("announces loading without leaving a blank screen", () => {
@@ -25,5 +26,11 @@ describe("U13C", () => {
 
     expect(wrapper.get("h1").text()).toContain("Permission required");
     expect(wrapper.text()).toContain("administrator");
+  });
+
+  it("explains that missing routes may be disabled modules", () => {
+    const wrapper = mount(NotFoundState);
+    expect(wrapper.get("h1").text()).toContain("unavailable");
+    expect(wrapper.text()).toContain("module may be disabled");
   });
 });

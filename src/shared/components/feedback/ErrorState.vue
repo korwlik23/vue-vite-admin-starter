@@ -27,17 +27,11 @@ defineProps<{
 
 <style scoped>
 .feedback-state {
-  max-width: 34rem;
-  padding-block: 3rem;
+  display: grid;
+  max-width: var(--content-reading);
+  gap: var(--space-4);
+  padding-block: var(--space-12);
 }
-
-button {
-  min-height: 2.75rem;
-  padding-inline: 1rem;
-  border: 0;
-  border-radius: 0.65rem;
-  color: white;
-  background: #172033;
-  font-weight: 750;
-}
+.feedback-state h1, .feedback-state p { margin: 0; }
+.feedback-state p { color: var(--color-text-muted); }
 </style>

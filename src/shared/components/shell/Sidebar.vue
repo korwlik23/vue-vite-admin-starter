@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { RouterLink } from "vue-router";
+
 defineProps<{
   items: readonly {
     id: string;
@@ -15,12 +17,19 @@ defineProps<{
       v-for="item in items"
       :key="item.id"
     >
-      <a
-        :href="item.href"
-        :aria-current="item.current ? 'page' : undefined"
+      <RouterLink
+        v-slot="{ href, navigate, isExactActive }"
+        :to="item.href"
+        custom
       >
-        {{ item.label }}
-      </a>
+        <a
+          :href="href"
+          :aria-current="isExactActive ? 'page' : undefined"
+          @click="navigate"
+        >
+          {{ item.label }}
+        </a>
+      </RouterLink>
     </li>
   </ul>
 </template>
@@ -28,7 +37,7 @@ defineProps<{
 <style scoped>
 .sidebar-list {
   display: grid;
-  gap: 0.35rem;
+  gap: var(--space-1);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -36,16 +45,16 @@ defineProps<{
 
 a {
   display: flex;
-  min-height: 2.75rem;
+  min-height: var(--control-height-md);
   align-items: center;
-  padding-inline: 0.8rem;
-  border-radius: 0.65rem;
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-md);
   color: inherit;
   text-decoration: none;
 }
 
 a[aria-current="page"] {
-  color: white;
-  background: #172033;
+  color: var(--color-text-inverse);
+  background: var(--color-action);
 }
 </style>

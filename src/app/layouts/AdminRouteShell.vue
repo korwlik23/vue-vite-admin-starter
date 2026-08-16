@@ -21,16 +21,7 @@ const props = withDefaults(defineProps<{
   <AdminShell>
     <template #navigation>
       <Sidebar
-        :items="props.navigationItems.length > 0 ? props.navigationItems : [
-          { id: 'foundation', label: 'Foundation', href: '/' },
-          { id: 'roles', label: 'Roles', href: '/authorization/roles' },
-          { id: 'users', label: 'Users', href: '/users' },
-          { id: 'memberships', label: 'Memberships', href: '/accounts/memberships' },
-          { id: 'audit', label: 'Audit', href: '/audit/events' },
-          { id: 'modules', label: 'Modules', href: '/operations/modules' },
-          { id: 'locales', label: 'Locales', href: '/localization/locales' },
-          { id: 'catalog', label: 'Catalog', href: '/localization/catalog' },
-        ]"
+        :items="props.navigationItems"
       />
     </template>
     <RouterView />
